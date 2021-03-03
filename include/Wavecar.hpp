@@ -29,16 +29,24 @@ struct WavecarHeader {
   Cell real, reciprocal;
 };
 
-using Band = std::vector<std::complex<double>>;
-using KBand = std::map<CellVector, Band>;
+using KPoint = CellVector;
+using OrbitalCoefficients = std::vector<std::complex<double>>;
+struct VerticalBand {
+  std::vector<double> realEnergies;
+  std::vector<double> imagEnergies;
+  std::vector<double> occupancies;
+  std::vector<OrbitalCoefficients> coefficients;
+};
+using KBand = std::pair<KPoint, VerticalBand>;
 
 struct WaveDescriptor {
   std::vector<KBand> bands;
+  inline size_t nKpoints() { return bands.size(); }
 };
 
 struct Wavecar {
   WavecarHeader header;
-  WaveDescriptor descriptor;
+  std::vector<WaveDescriptor> descriptors;
 };
 
 CellVector crossProduct(const CellVector &a, const CellVector &b) {
@@ -83,11 +91,10 @@ Cell reciprocalCell(const Cell &c) {
   return r;
 }
 
-std::pair<CellVector, Band>
+KBand
 readWaveWaveDescriptor( const std::string &fileName
                       , const WavecarHeader &header
                       , const size_t &spinIndex
-                      , const size_t &kIndex
                       ) {
 
   std::vector<double> realEnergies(header.nBands)
@@ -95,11 +102,11 @@ readWaveWaveDescriptor( const std::string &fileName
     , occupancies(header.nBands)
     ;
 
-  double buffer, vbuffer[3];
+  double buffer;
   std::fstream file(fileName, std::ios::binary | std::ios::in);
   size_t numberPlaneWaves;
   CellVector kpoint;
-  std::vector<std::complex<double>> C;
+  std::vector<OrbitalCoefficients> coefficients;
 
   file.seekg((spinIndex + 2) * header.recordLength);
 
@@ -107,7 +114,7 @@ readWaveWaveDescriptor( const std::string &fileName
   file.read((char*)&buffer, sizeof(double));
   numberPlaneWaves = size_t(buffer);
 
-  C.resize(header.nBands * numberPlaneWaves);
+  //C.resize(header.nBands * numberPlaneWaves);
 
   file.read((char*)&kpoint, 3*sizeof(double));
 
@@ -117,18 +124,23 @@ readWaveWaveDescriptor( const std::string &fileName
     file.read((char*)(occupancies.data() + n), sizeof(double));
   }
 
-  for (size_t n=0; n < header.nBands * numberPlaneWaves; n++) {
-    file.read((char*)&C[n], 2*sizeof(double));
+  for (size_t n=0; n < header.nBands; n++) {
+    OrbitalCoefficients C;
+    C.resize(numberPlaneWaves);
+    coefficients.push_back(C);
+    file.read((char*)C.data(), numberPlaneWaves * 2 * sizeof(double));
   }
 
-  return {kpoint, C };
+  return { kpoint
+         , {realEnergies, imagEnergies, occupancies, coefficients}
+         };
 
 }
 
 WavecarHeader readWavecarHeader(const std::string &fileName) {
   WavecarHeader header;
   std::fstream file(fileName, std::ios::binary | std::ios::in);
-  double buffer, vbuffer[3];
+  double buffer;
   std::vector<double> vvbuffer;
   // const double hbarConst = 0.26246582250210965422; // 1/eV Ang^2
 
@@ -172,42 +184,77 @@ WavecarHeader readWavecarHeader(const std::string &fileName) {
 
 Wavecar readWavecar(const std::string &fileName) {
   auto header(readWavecarHeader(fileName));
-  WaveDescriptor descriptor;
+  std::vector<WaveDescriptor> descriptors;
 
   for (uint8_t i=0; i < header.nSpin; i++) {
-    KBand band;
+    WaveDescriptor descriptor;
     for (size_t k=0; k < header.nKpoints; k++) {
-      auto pair(readWaveWaveDescriptor(fileName, header, i, k));
-      band.emplace(pair);
+      auto kBand(readWaveWaveDescriptor(fileName, header, i));
+      descriptor.bands.push_back(kBand);
     }
-    descriptor.bands.push_back(band);
+    descriptors.push_back(descriptor);
   }
-  return {header, descriptor};
+  return {header, descriptors};
 
 }
 
-int main (int argc, char **argv) {
-  std::cout << "WAVIS" << std::endl;
-  std::cout << "=====" << std::endl;
-  auto wavecar(readWavecar("WAVECAR"));
-  auto& header(wavecar.header);
+void writeToWavecar(std::ofstream &f, const CellVector &v) {
+  f.write((char*)v.data(), sizeof(CellVector));
+}
 
-  std::cout << "recordLength: " << header.recordLength << "\n"
-            << "nSpin: " << header.nSpin << "\n"
-            << "version: " << header.version << "\n"
-            << "nKpoints: " << header.nKpoints << "\n"
-            << "nBands: " << header.nBands << "\n"
-            << "encut: " << header.encut << "\n"
-            << "eFermi: " << header.eFermi << "\n"
-            << "volume: " << header.real.volume << "\n"
-            << "\n";
+void writeToWavecar(std::ofstream &f, const Cell &c) {
+  for (const auto& v: c.basis) writeToWavecar(f, v);
+}
 
-  std::cout << "Lattice vectors: \n";
-  for (const auto &b: header.real.basis)
-    printf("- %f %f %f\n", b[0], b[1], b[2]);
+void writeToWavecar(std::ofstream &f, const WavecarHeader &h) {
+  const auto writeInt
+    = [&f](const size_t &i) {
+        const double j(i);
+        f.write((char*)&j, sizeof(double));
+    };
+  writeInt(h.recordLength);
+  writeInt(h.nSpin);
+  writeInt(h.version);
 
-  std::cout << "Reciprocal vectors: \n";
-  for (const auto &b: header.reciprocal.basis)
-    printf("- %f %f %f\n", b[0], b[1], b[2]);
+  f.seekp(h.recordLength);
+
+  writeInt(h.nKpoints);
+  writeInt(h.nBands);
+  writeInt(h.encut);
+
+  writeToWavecar(f, h.real);
+  f.write((char*)&h.eFermi, sizeof(double));
+}
+
+void writeToWavecar(std::ofstream &f, const WaveDescriptor &d) {
+  for (auto const& kband: d.bands)  { // spin loop
+    const auto& kVector(kband.first);
+    const auto& vband(kband.second);
+    const double numberPlaneWaves(vband.coefficients[0].size());
+
+    f.write((char*)&numberPlaneWaves, sizeof(double));
+    writeToWavecar(f, kVector);
+
+    for (size_t n(0); n < vband.realEnergies.size(); n++) {
+      f.write((char*)&vband.realEnergies[n], sizeof(double));
+      f.write((char*)&vband.imagEnergies[n], sizeof(double));
+      f.write((char*)&vband.occupancies[n], sizeof(double));
+    }
+
+    for (size_t n(0); n < vband.realEnergies.size(); n++) {
+      f.write((char*)vband.coefficients[n].data(),
+              numberPlaneWaves * 2 * sizeof(double));
+    }
+
+  }
+}
+
+void writeToWavecar(std::ofstream &f, const Wavecar &w) {
+  writeToWavecar(f, w.header);
+
+  for (size_t ispin(0); ispin < w.descriptors.size(); ispin++) {
+    f.seekp((ispin + 2) * w.header.recordLength);
+    writeToWavecar(f, w.descriptors[ispin]);
+  }
 
 }

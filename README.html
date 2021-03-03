@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-02-27 Sat 00:12 -->
+<!-- 2021-03-03 Wed 18:18 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Wavecar.hpp</title>
@@ -40,7 +40,7 @@
   }
   pre.src {
     position: relative;
-    overflow: visible;
+    overflow: auto;
     padding-top: 1.2em;
   }
   pre.src:before {
@@ -194,50 +194,26 @@
   /*]]>*/-->
 </style>
 <script type="text/javascript">
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
-
-Copyright (C) 2012-2020 Free Software Foundation, Inc.
-
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
-
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
+// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
 <!--/*--><![CDATA[/*><!--*/
- function CodeHighlightOn(elem, id)
- {
-   var target = document.getElementById(id);
-   if(null != target) {
-     elem.cacheClassElem = elem.className;
-     elem.cacheClassTarget = target.className;
-     target.className = "code-highlighted";
-     elem.className   = "code-highlighted";
-   }
- }
- function CodeHighlightOff(elem, id)
- {
-   var target = document.getElementById(id);
-   if(elem.cacheClassElem)
-     elem.className = elem.cacheClassElem;
-   if(elem.cacheClassTarget)
-     target.className = elem.cacheClassTarget;
- }
-/*]]>*///-->
+     function CodeHighlightOn(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.add("code-highlighted");
+         target.classList.add("code-highlighted");
+       }
+     }
+     function CodeHighlightOff(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.remove("code-highlighted");
+         target.classList.remove("code-highlighted");
+       }
+     }
+    /*]]>*///-->
+// @license-end
 </script>
 <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
@@ -269,44 +245,52 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org060ecab">Wavecar.hpp</a>
+<li><a href="#orga9c0de9">Wavecar.hpp</a>
 <ul>
-<li><a href="#orga08e4db">Introduction</a></li>
-<li><a href="#org3818a65">Header</a></li>
-<li><a href="#org32d1ba3">Main types</a></li>
-<li><a href="#org85982a8">Mathematical functions</a>
+<li><a href="#orgb0ec54e">Introduction</a></li>
+<li><a href="#org6d4d7bd">Header</a></li>
+<li><a href="#orgd600491">Main types</a></li>
+<li><a href="#org4ec7b60">Mathematical functions</a>
 <ul>
-<li><a href="#orgf1333ef">Products</a></li>
-<li><a href="#org75f1a29">Cell volume</a></li>
-<li><a href="#orgf19faed">Reciprocal cell</a></li>
+<li><a href="#org30bd0be">Products</a></li>
+<li><a href="#org3d1bc99">Cell volume</a></li>
+<li><a href="#org840f777">Reciprocal cell</a></li>
 </ul>
 </li>
-<li><a href="#org4f58d0c"><code>WAVECAR</code> parsing</a>
+<li><a href="#org3fd2b25"><code>WAVECAR</code> parsing</a>
 <ul>
-<li><a href="#orgfff8a3c">Understanding the code</a></li>
-<li><a href="#orgdfa1472">Wave descriptor</a></li>
-<li><a href="#org497fbf2">Header</a></li>
-<li><a href="#orgdf5894a">The whole <code>WAVECAR</code></a></li>
+<li><a href="#orgf5ea680">Understanding the code</a></li>
+<li><a href="#org9278043">Wave descriptor</a></li>
+<li><a href="#org64614c5">Header</a></li>
+<li><a href="#orgdc45c33">The whole <code>WAVECAR</code></a></li>
 </ul>
 </li>
-<li><a href="#org26d6f13">Main function</a></li>
+<li><a href="#org9212da8"><code>WAVECAR</code> writing</a>
+<ul>
+<li><a href="#orgc91b19e"><code>CellVector</code></a></li>
+<li><a href="#orgea788c4"><code>Cell</code></a></li>
+<li><a href="#org126ed2f"><code>WavecarHeader</code></a></li>
+<li><a href="#org5971b0e"><code>WaveDescriptor</code></a></li>
+<li><a href="#orgc913909"><code>Wavecar</code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org483a423">Tests</a>
+<ul>
+<li><a href="#orgc8312dd">Main function</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
-
-
-<div id="outline-container-org060ecab" class="outline-2">
-<h2 id="org060ecab">Wavecar.hpp</h2>
-<div class="outline-text-2" id="text-org060ecab">
+<div id="outline-container-orga9c0de9" class="outline-2">
+<h2 id="orga9c0de9">Wavecar.hpp</h2>
+<div class="outline-text-2" id="text-orga9c0de9">
 </div>
-
-
-
-<div id="outline-container-orga08e4db" class="outline-3">
-<h3 id="orga08e4db">Introduction</h3>
-<div class="outline-text-3" id="text-orga08e4db">
+<div id="outline-container-orgb0ec54e" class="outline-3">
+<h3 id="orgb0ec54e">Introduction</h3>
+<div class="outline-text-3" id="text-orgb0ec54e">
 <p>
 This package implements a C++11 header-only library
 for reading <code>WAVECAR</code> files in the <code>VASP5</code> format.
@@ -323,9 +307,9 @@ As a convenience you can find the header file in the <code>include</code> direct
 </div>
 </div>
 
-<div id="outline-container-org3818a65" class="outline-3">
-<h3 id="org3818a65">Header</h3>
-<div class="outline-text-3" id="text-org3818a65">
+<div id="outline-container-org6d4d7bd" class="outline-3">
+<h3 id="org6d4d7bd">Header</h3>
+<div class="outline-text-3" id="text-org6d4d7bd">
 <p>
 We will only need libraries available in the standard library:
 </p>
@@ -347,58 +331,66 @@ We will only need libraries available in the standard library:
 </div>
 </div>
 
-<div id="outline-container-org32d1ba3" class="outline-3">
-<h3 id="org32d1ba3">Main types</h3>
-<div class="outline-text-3" id="text-org32d1ba3">
+<div id="outline-container-orgd600491" class="outline-3">
+<h3 id="orgd600491">Main types</h3>
+<div class="outline-text-3" id="text-orgd600491">
 <p>
 We define the main structure for the WAVECAR header,
 </p>
 
 <div class="org-src-container">
-<pre class="src src-c++"><span style="color: #5317ac;">using</span><span style="color: #2f4f4f;"> </span><span style="color: #8f0075;">CellVector</span><span style="color: #2f4f4f;"> </span>=<span style="color: #2f4f4f;"> </span><span style="color: #0000c0;">std</span>::<span style="color: #8f0075;">array</span><span style="color: #145c33;">&lt;</span><span style="color: #8f0075;">double</span>,<span style="color: #2f4f4f;"> </span>3<span style="color: #145c33;">&gt;</span>;
+<pre class="src src-c++"><span style="color: #5317ac;">using</span><span style="color: #2f4f4f;"> </span><span style="color: #005a5f;">CellVector</span><span style="color: #2f4f4f;"> </span>=<span style="color: #2f4f4f;"> </span><span style="color: #0000c0;">std</span>::<span style="color: #005a5f;">array</span><span style="color: #145c33;">&lt;</span><span style="color: #005a5f;">double</span>,<span style="color: #2f4f4f;"> </span>3<span style="color: #145c33;">&gt;</span>;
 
-<span style="color: #5317ac;">struct</span><span style="color: #2f4f4f;"> </span><span style="color: #8f0075;">Cell</span><span style="color: #2f4f4f;"> </span><span style="color: #145c33;">{</span>
-<span style="color: #2f4f4f;">  </span><span style="color: #0000c0;">std</span>::<span style="color: #8f0075;">array</span><span style="color: #5317ac;">&lt;</span><span style="color: #8f0075;">CellVector</span>,<span style="color: #2f4f4f;"> </span>3<span style="color: #5317ac;">&gt;</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">basis</span>;
-<span style="color: #2f4f4f;">  </span><span style="color: #8f0075;">double</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">volume</span>;
+<span style="color: #5317ac;">struct</span><span style="color: #2f4f4f;"> </span><span style="color: #005a5f;">Cell</span><span style="color: #2f4f4f;"> </span><span style="color: #145c33;">{</span>
+<span style="color: #2f4f4f;">  </span><span style="color: #0000c0;">std</span>::<span style="color: #005a5f;">array</span><span style="color: #5317ac;">&lt;</span><span style="color: #005a5f;">CellVector</span>,<span style="color: #2f4f4f;"> </span>3<span style="color: #5317ac;">&gt;</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">basis</span>;
+<span style="color: #2f4f4f;">  </span><span style="color: #005a5f;">double</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">volume</span>;
 <span style="color: #145c33;">}</span>;
 
-<span style="color: #5317ac;">struct</span><span style="color: #2f4f4f;"> </span><span style="color: #8f0075;">WavecarHeader</span><span style="color: #2f4f4f;"> </span><span style="color: #145c33;">{</span>
-<span style="color: #2f4f4f;">  </span><span style="color: #8f0075;">size_t</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">recordLength</span>;
-<span style="color: #2f4f4f;">  </span><span style="color: #8f0075;">size_t</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">nSpin</span>;
-<span style="color: #2f4f4f;">  </span><span style="color: #8f0075;">size_t</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">version</span>;
-<span style="color: #2f4f4f;">  </span><span style="color: #8f0075;">size_t</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">nKpoints</span>;
-<span style="color: #2f4f4f;">  </span><span style="color: #8f0075;">size_t</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">nBands</span>;
-<span style="color: #2f4f4f;">  </span><span style="color: #8f0075;">size_t</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">encut</span>;
-<span style="color: #2f4f4f;">  </span><span style="color: #8f0075;">double</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">eFermi</span>;
-<span style="color: #2f4f4f;">  </span><span style="color: #8f0075;">size_t</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">nPlaneWaves</span>;
-<span style="color: #2f4f4f;">  </span><span style="color: #8f0075;">Cell</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">real</span>,<span style="color: #2f4f4f;"> </span><span style="color: #00538b;">reciprocal</span>;
+<span style="color: #5317ac;">struct</span><span style="color: #2f4f4f;"> </span><span style="color: #005a5f;">WavecarHeader</span><span style="color: #2f4f4f;"> </span><span style="color: #145c33;">{</span>
+<span style="color: #2f4f4f;">  </span><span style="color: #005a5f;">size_t</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">recordLength</span>;
+<span style="color: #2f4f4f;">  </span><span style="color: #005a5f;">size_t</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">nSpin</span>;
+<span style="color: #2f4f4f;">  </span><span style="color: #005a5f;">size_t</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">version</span>;
+<span style="color: #2f4f4f;">  </span><span style="color: #005a5f;">size_t</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">nKpoints</span>;
+<span style="color: #2f4f4f;">  </span><span style="color: #005a5f;">size_t</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">nBands</span>;
+<span style="color: #2f4f4f;">  </span><span style="color: #005a5f;">size_t</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">encut</span>;
+<span style="color: #2f4f4f;">  </span><span style="color: #005a5f;">double</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">eFermi</span>;
+<span style="color: #2f4f4f;">  </span><span style="color: #005a5f;">size_t</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">nPlaneWaves</span>;
+<span style="color: #2f4f4f;">  </span><span style="color: #005a5f;">Cell</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">real</span>,<span style="color: #2f4f4f;"> </span><span style="color: #00538b;">reciprocal</span>;
 <span style="color: #145c33;">}</span>;
 
-<span style="color: #5317ac;">using</span><span style="color: #2f4f4f;"> </span><span style="color: #8f0075;">Band</span><span style="color: #2f4f4f;"> </span>=<span style="color: #2f4f4f;"> </span><span style="color: #0000c0;">std</span>::<span style="color: #8f0075;">vector</span><span style="color: #145c33;">&lt;</span><span style="color: #0000c0;">std</span>::<span style="color: #8f0075;">complex</span><span style="color: #5317ac;">&lt;</span><span style="color: #8f0075;">double</span><span style="color: #5317ac;">&gt;</span><span style="color: #145c33;">&gt;</span>;
-<span style="color: #5317ac;">using</span><span style="color: #2f4f4f;"> </span><span style="color: #8f0075;">KBand</span><span style="color: #2f4f4f;"> </span>=<span style="color: #2f4f4f;"> </span><span style="color: #0000c0;">std</span>::<span style="color: #8f0075;">map</span><span style="color: #145c33;">&lt;</span><span style="color: #8f0075;">CellVector</span>,<span style="color: #2f4f4f;"> </span><span style="color: #8f0075;">Band</span><span style="color: #145c33;">&gt;</span>;
+<span style="color: #5317ac;">using</span><span style="color: #2f4f4f;"> </span><span style="color: #005a5f;">KPoint</span><span style="color: #2f4f4f;"> </span>=<span style="color: #2f4f4f;"> </span>CellVector;
+<span style="color: #5317ac;">using</span><span style="color: #2f4f4f;"> </span><span style="color: #005a5f;">OrbitalCoefficients</span><span style="color: #2f4f4f;"> </span>=<span style="color: #2f4f4f;"> </span><span style="color: #0000c0;">std</span>::<span style="color: #005a5f;">vector</span><span style="color: #145c33;">&lt;</span><span style="color: #0000c0;">std</span>::<span style="color: #005a5f;">complex</span><span style="color: #5317ac;">&lt;</span><span style="color: #005a5f;">double</span><span style="color: #5317ac;">&gt;</span><span style="color: #145c33;">&gt;</span>;
+<span style="color: #5317ac;">struct</span><span style="color: #2f4f4f;"> </span><span style="color: #005a5f;">VerticalBand</span><span style="color: #2f4f4f;"> </span><span style="color: #145c33;">{</span>
+<span style="color: #2f4f4f;">  </span><span style="color: #0000c0;">std</span>::<span style="color: #005a5f;">vector</span><span style="color: #5317ac;">&lt;</span><span style="color: #005a5f;">double</span><span style="color: #5317ac;">&gt;</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">realEnergies</span>;
+<span style="color: #2f4f4f;">  </span><span style="color: #0000c0;">std</span>::<span style="color: #005a5f;">vector</span><span style="color: #5317ac;">&lt;</span><span style="color: #005a5f;">double</span><span style="color: #5317ac;">&gt;</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">imagEnergies</span>;
+<span style="color: #2f4f4f;">  </span><span style="color: #0000c0;">std</span>::<span style="color: #005a5f;">vector</span><span style="color: #5317ac;">&lt;</span><span style="color: #005a5f;">double</span><span style="color: #5317ac;">&gt;</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">occupancies</span>;
+<span style="color: #2f4f4f;">  </span><span style="color: #0000c0;">std</span>::<span style="color: #005a5f;">vector</span><span style="color: #5317ac;">&lt;</span><span style="color: #005a5f;">OrbitalCoefficients</span><span style="color: #5317ac;">&gt;</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">coefficients</span>;
+<span style="color: #145c33;">}</span>;
+<span style="color: #5317ac;">using</span><span style="color: #2f4f4f;"> </span><span style="color: #005a5f;">KBand</span><span style="color: #2f4f4f;"> </span>=<span style="color: #2f4f4f;"> </span><span style="color: #0000c0;">std</span>::<span style="color: #005a5f;">pair</span><span style="color: #145c33;">&lt;</span><span style="color: #005a5f;">KPoint</span>,<span style="color: #2f4f4f;"> </span><span style="color: #005a5f;">VerticalBand</span><span style="color: #145c33;">&gt;</span>;
 
-<span style="color: #5317ac;">struct</span><span style="color: #2f4f4f;"> </span><span style="color: #8f0075;">WaveDescriptor</span><span style="color: #2f4f4f;"> </span><span style="color: #145c33;">{</span>
-<span style="color: #2f4f4f;">  </span><span style="color: #0000c0;">std</span>::<span style="color: #8f0075;">vector</span><span style="color: #5317ac;">&lt;</span><span style="color: #8f0075;">KBand</span><span style="color: #5317ac;">&gt;</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">bands</span>;
+<span style="color: #5317ac;">struct</span><span style="color: #2f4f4f;"> </span><span style="color: #005a5f;">WaveDescriptor</span><span style="color: #2f4f4f;"> </span><span style="color: #145c33;">{</span>
+<span style="color: #2f4f4f;">  </span><span style="color: #0000c0;">std</span>::<span style="color: #005a5f;">vector</span><span style="color: #5317ac;">&lt;</span><span style="color: #005a5f;">KBand</span><span style="color: #5317ac;">&gt;</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">bands</span>;
+<span style="color: #2f4f4f;">  </span><span style="color: #5317ac;">inline</span><span style="color: #2f4f4f;"> </span><span style="color: #005a5f;">size_t</span><span style="color: #2f4f4f;"> </span><span style="color: #721045;">nKpoints</span><span style="color: #5317ac;">()</span><span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">{</span><span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">return</span><span style="color: #2f4f4f;"> </span>bands.size<span style="color: #005a5f;">()</span>;<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">}</span>
 <span style="color: #145c33;">}</span>;
 
-<span style="color: #5317ac;">struct</span><span style="color: #2f4f4f;"> </span><span style="color: #8f0075;">Wavecar</span><span style="color: #2f4f4f;"> </span><span style="color: #145c33;">{</span>
-<span style="color: #2f4f4f;">  </span><span style="color: #8f0075;">WavecarHeader</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">header</span>;
-<span style="color: #2f4f4f;">  </span><span style="color: #8f0075;">WaveDescriptor</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">descriptor</span>;
+<span style="color: #5317ac;">struct</span><span style="color: #2f4f4f;"> </span><span style="color: #005a5f;">Wavecar</span><span style="color: #2f4f4f;"> </span><span style="color: #145c33;">{</span>
+<span style="color: #2f4f4f;">  </span><span style="color: #005a5f;">WavecarHeader</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">header</span>;
+<span style="color: #2f4f4f;">  </span><span style="color: #0000c0;">std</span>::<span style="color: #005a5f;">vector</span><span style="color: #5317ac;">&lt;</span><span style="color: #005a5f;">WaveDescriptor</span><span style="color: #5317ac;">&gt;</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">descriptors</span>;
 <span style="color: #145c33;">}</span>;
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org85982a8" class="outline-3">
-<h3 id="org85982a8">Mathematical functions</h3>
-<div class="outline-text-3" id="text-org85982a8">
+<div id="outline-container-org4ec7b60" class="outline-3">
+<h3 id="org4ec7b60">Mathematical functions</h3>
+<div class="outline-text-3" id="text-org4ec7b60">
 </div>
-<div id="outline-container-orgf1333ef" class="outline-4">
-<h4 id="orgf1333ef">Products</h4>
-<div class="outline-text-4" id="text-orgf1333ef">
+<div id="outline-container-org30bd0be" class="outline-4">
+<h4 id="org30bd0be">Products</h4>
+<div class="outline-text-4" id="text-org30bd0be">
 <div class="org-src-container">
-<pre class="src src-c++"><span style="color: #8f0075;">CellVector</span><span style="color: #2f4f4f;"> </span><span style="color: #721045;">crossProduct</span><span style="color: #145c33;">(</span><span style="color: #5317ac;">const</span><span style="color: #2f4f4f;"> </span><span style="color: #8f0075;">CellVector</span><span style="color: #2f4f4f;"> </span>&amp;<span style="color: #00538b;">a</span>,<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">const</span><span style="color: #2f4f4f;"> </span><span style="color: #8f0075;">CellVector</span><span style="color: #2f4f4f;"> </span>&amp;<span style="color: #00538b;">b</span><span style="color: #145c33;">)</span><span style="color: #2f4f4f;"> </span><span style="color: #145c33;">{</span>
+<pre class="src src-c++"><span style="color: #005a5f;">CellVector</span><span style="color: #2f4f4f;"> </span><span style="color: #721045;">crossProduct</span><span style="color: #145c33;">(</span><span style="color: #5317ac;">const</span><span style="color: #2f4f4f;"> </span><span style="color: #005a5f;">CellVector</span><span style="color: #2f4f4f;"> </span>&amp;<span style="color: #00538b;">a</span>,<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">const</span><span style="color: #2f4f4f;"> </span><span style="color: #005a5f;">CellVector</span><span style="color: #2f4f4f;"> </span>&amp;<span style="color: #00538b;">b</span><span style="color: #145c33;">)</span><span style="color: #2f4f4f;"> </span><span style="color: #145c33;">{</span>
 <span style="color: #2f4f4f;">  </span><span style="color: #5317ac;">return</span>
 <span style="color: #2f4f4f;">    </span><span style="color: #5317ac;">{</span><span style="color: #2f4f4f;"> </span>a<span style="color: #005a5f;">[</span>1<span style="color: #005a5f;">]</span><span style="color: #2f4f4f;"> </span>*<span style="color: #2f4f4f;"> </span>b<span style="color: #005a5f;">[</span>2<span style="color: #005a5f;">]</span><span style="color: #2f4f4f;"> </span>-<span style="color: #2f4f4f;"> </span>a<span style="color: #005a5f;">[</span>2<span style="color: #005a5f;">]</span><span style="color: #2f4f4f;"> </span>*<span style="color: #2f4f4f;"> </span>b<span style="color: #005a5f;">[</span>1<span style="color: #005a5f;">]</span>
 <span style="color: #2f4f4f;">    </span>,<span style="color: #2f4f4f;"> </span>a<span style="color: #005a5f;">[</span>2<span style="color: #005a5f;">]</span><span style="color: #2f4f4f;"> </span>*<span style="color: #2f4f4f;"> </span>b<span style="color: #005a5f;">[</span>0<span style="color: #005a5f;">]</span><span style="color: #2f4f4f;"> </span>-<span style="color: #2f4f4f;"> </span>a<span style="color: #005a5f;">[</span>0<span style="color: #005a5f;">]</span><span style="color: #2f4f4f;"> </span>*<span style="color: #2f4f4f;"> </span>b<span style="color: #005a5f;">[</span>2<span style="color: #005a5f;">]</span>
@@ -406,15 +398,15 @@ We define the main structure for the WAVECAR header,
 <span style="color: #2f4f4f;">    </span><span style="color: #5317ac;">}</span>;
 <span style="color: #145c33;">}</span>
 
-<span style="color: #8f0075;">double</span><span style="color: #2f4f4f;"> </span><span style="color: #721045;">dotProduct</span><span style="color: #145c33;">(</span><span style="color: #5317ac;">const</span><span style="color: #2f4f4f;"> </span><span style="color: #8f0075;">CellVector</span><span style="color: #2f4f4f;"> </span>&amp;<span style="color: #00538b;">a</span>,<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">const</span><span style="color: #2f4f4f;"> </span><span style="color: #8f0075;">CellVector</span><span style="color: #2f4f4f;"> </span>&amp;<span style="color: #00538b;">b</span><span style="color: #145c33;">)</span><span style="color: #2f4f4f;"> </span><span style="color: #145c33;">{</span>
+<span style="color: #005a5f;">double</span><span style="color: #2f4f4f;"> </span><span style="color: #721045;">dotProduct</span><span style="color: #145c33;">(</span><span style="color: #5317ac;">const</span><span style="color: #2f4f4f;"> </span><span style="color: #005a5f;">CellVector</span><span style="color: #2f4f4f;"> </span>&amp;<span style="color: #00538b;">a</span>,<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">const</span><span style="color: #2f4f4f;"> </span><span style="color: #005a5f;">CellVector</span><span style="color: #2f4f4f;"> </span>&amp;<span style="color: #00538b;">b</span><span style="color: #145c33;">)</span><span style="color: #2f4f4f;"> </span><span style="color: #145c33;">{</span>
 <span style="color: #2f4f4f;">  </span><span style="color: #5317ac;">return</span><span style="color: #2f4f4f;"> </span><span style="color: #0000c0;">std</span>::inner_product<span style="color: #5317ac;">(</span>a.begin<span style="color: #005a5f;">()</span>,<span style="color: #2f4f4f;"> </span>a.end<span style="color: #005a5f;">()</span>,<span style="color: #2f4f4f;"> </span>b.begin<span style="color: #005a5f;">()</span>,<span style="color: #2f4f4f;"> </span>0.0<span style="color: #5317ac;">)</span>;
 <span style="color: #145c33;">}</span>
 
-<span style="color: #8f0075;">double</span><span style="color: #2f4f4f;"> </span><span style="color: #721045;">norm</span><span style="color: #145c33;">(</span><span style="color: #5317ac;">const</span><span style="color: #2f4f4f;"> </span><span style="color: #8f0075;">CellVector</span><span style="color: #2f4f4f;"> </span>&amp;<span style="color: #00538b;">a</span><span style="color: #145c33;">)</span><span style="color: #2f4f4f;"> </span><span style="color: #145c33;">{</span>
+<span style="color: #005a5f;">double</span><span style="color: #2f4f4f;"> </span><span style="color: #721045;">norm</span><span style="color: #145c33;">(</span><span style="color: #5317ac;">const</span><span style="color: #2f4f4f;"> </span><span style="color: #005a5f;">CellVector</span><span style="color: #2f4f4f;"> </span>&amp;<span style="color: #00538b;">a</span><span style="color: #145c33;">)</span><span style="color: #2f4f4f;"> </span><span style="color: #145c33;">{</span>
 <span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">return</span><span style="color: #2f4f4f;"> </span><span style="color: #0000c0;">std</span>::sqrt<span style="color: #5317ac;">(</span>dotProduct<span style="color: #005a5f;">(</span>a,<span style="color: #2f4f4f;"> </span>a<span style="color: #005a5f;">)</span><span style="color: #5317ac;">)</span>;
 <span style="color: #145c33;">}</span>
 
-<span style="color: #8f0075;">double</span><span style="color: #2f4f4f;"> </span><span style="color: #721045;">angleBetween</span><span style="color: #145c33;">(</span><span style="color: #5317ac;">const</span><span style="color: #2f4f4f;"> </span><span style="color: #8f0075;">CellVector</span><span style="color: #2f4f4f;"> </span>&amp;<span style="color: #00538b;">a</span>,<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">const</span><span style="color: #2f4f4f;"> </span><span style="color: #8f0075;">CellVector</span><span style="color: #2f4f4f;"> </span>&amp;<span style="color: #00538b;">b</span><span style="color: #145c33;">)</span><span style="color: #2f4f4f;"> </span><span style="color: #145c33;">{</span>
+<span style="color: #005a5f;">double</span><span style="color: #2f4f4f;"> </span><span style="color: #721045;">angleBetween</span><span style="color: #145c33;">(</span><span style="color: #5317ac;">const</span><span style="color: #2f4f4f;"> </span><span style="color: #005a5f;">CellVector</span><span style="color: #2f4f4f;"> </span>&amp;<span style="color: #00538b;">a</span>,<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">const</span><span style="color: #2f4f4f;"> </span><span style="color: #005a5f;">CellVector</span><span style="color: #2f4f4f;"> </span>&amp;<span style="color: #00538b;">b</span><span style="color: #145c33;">)</span><span style="color: #2f4f4f;"> </span><span style="color: #145c33;">{</span>
 <span style="color: #2f4f4f;">  </span><span style="color: #5317ac;">return</span><span style="color: #2f4f4f;"> </span><span style="color: #0000c0;">std</span>::acos<span style="color: #5317ac;">(</span>dotProduct<span style="color: #005a5f;">(</span>a,<span style="color: #2f4f4f;"> </span>b<span style="color: #005a5f;">)</span><span style="color: #2f4f4f;"> </span>/<span style="color: #2f4f4f;"> </span>norm<span style="color: #005a5f;">(</span>a<span style="color: #005a5f;">)</span><span style="color: #2f4f4f;"> </span>/<span style="color: #2f4f4f;"> </span>norm<span style="color: #005a5f;">(</span>b<span style="color: #005a5f;">)</span><span style="color: #5317ac;">)</span>;
 <span style="color: #145c33;">}</span>
 </pre>
@@ -423,14 +415,14 @@ We define the main structure for the WAVECAR header,
 </div>
 
 
-<div id="outline-container-org75f1a29" class="outline-4">
-<h4 id="org75f1a29">Cell volume</h4>
-<div class="outline-text-4" id="text-org75f1a29">
+<div id="outline-container-org3d1bc99" class="outline-4">
+<h4 id="org3d1bc99">Cell volume</h4>
+<div class="outline-text-4" id="text-org3d1bc99">
 <p>
 We can use the products to calculate the cell volume given by a basis
 </p>
 <div class="org-src-container">
-<pre class="src src-c++"><span style="color: #8f0075;">double</span><span style="color: #2f4f4f;"> </span><span style="color: #721045;">cellVolume</span><span style="color: #145c33;">(</span><span style="color: #5317ac;">const</span><span style="color: #2f4f4f;"> </span><span style="color: #8f0075;">Cell</span><span style="color: #2f4f4f;"> </span>&amp;<span style="color: #00538b;">c</span><span style="color: #145c33;">)</span><span style="color: #2f4f4f;"> </span><span style="color: #145c33;">{</span>
+<pre class="src src-c++"><span style="color: #005a5f;">double</span><span style="color: #2f4f4f;"> </span><span style="color: #721045;">cellVolume</span><span style="color: #145c33;">(</span><span style="color: #5317ac;">const</span><span style="color: #2f4f4f;"> </span><span style="color: #005a5f;">Cell</span><span style="color: #2f4f4f;"> </span>&amp;<span style="color: #00538b;">c</span><span style="color: #145c33;">)</span><span style="color: #2f4f4f;"> </span><span style="color: #145c33;">{</span>
 <span style="color: #2f4f4f;">  </span><span style="color: #5317ac;">return</span>
 <span style="color: #2f4f4f;">    </span>dotProduct<span style="color: #5317ac;">(</span><span style="color: #2f4f4f;"> </span>c.basis<span style="color: #005a5f;">[</span>0<span style="color: #005a5f;">]</span>
 <span style="color: #2f4f4f;">              </span>,<span style="color: #2f4f4f;"> </span>crossProduct<span style="color: #005a5f;">(</span><span style="color: #2f4f4f;"> </span>c.basis<span style="color: #863927;">[</span>1<span style="color: #863927;">]</span>
@@ -443,21 +435,21 @@ We can use the products to calculate the cell volume given by a basis
 </div>
 </div>
 
-<div id="outline-container-orgf19faed" class="outline-4">
-<h4 id="orgf19faed">Reciprocal cell</h4>
-<div class="outline-text-4" id="text-orgf19faed">
+<div id="outline-container-org840f777" class="outline-4">
+<h4 id="org840f777">Reciprocal cell</h4>
+<div class="outline-text-4" id="text-org840f777">
 <p>
 Here we calculate the reciprocal cell of a given cell
 </p>
 <div class="org-src-container">
-<pre class="src src-c++"><span style="color: #8f0075;">Cell</span><span style="color: #2f4f4f;"> </span><span style="color: #721045;">reciprocalCell</span><span style="color: #145c33;">(</span><span style="color: #5317ac;">const</span><span style="color: #2f4f4f;"> </span><span style="color: #8f0075;">Cell</span><span style="color: #2f4f4f;"> </span>&amp;<span style="color: #00538b;">c</span><span style="color: #145c33;">)</span><span style="color: #2f4f4f;"> </span><span style="color: #145c33;">{</span>
-<span style="color: #2f4f4f;">  </span><span style="color: #8f0075;">Cell</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">r</span>;
-<span style="color: #2f4f4f;">  </span><span style="color: #5317ac;">for</span><span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">(</span><span style="color: #8f0075;">size_t</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">i</span>=0;<span style="color: #2f4f4f;"> </span>i&lt;3;<span style="color: #2f4f4f;"> </span>i++<span style="color: #5317ac;">)</span><span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">{</span>
+<pre class="src src-c++"><span style="color: #005a5f;">Cell</span><span style="color: #2f4f4f;"> </span><span style="color: #721045;">reciprocalCell</span><span style="color: #145c33;">(</span><span style="color: #5317ac;">const</span><span style="color: #2f4f4f;"> </span><span style="color: #005a5f;">Cell</span><span style="color: #2f4f4f;"> </span>&amp;<span style="color: #00538b;">c</span><span style="color: #145c33;">)</span><span style="color: #2f4f4f;"> </span><span style="color: #145c33;">{</span>
+<span style="color: #2f4f4f;">  </span><span style="color: #005a5f;">Cell</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">r</span>;
+<span style="color: #2f4f4f;">  </span><span style="color: #5317ac;">for</span><span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">(</span><span style="color: #005a5f;">size_t</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">i</span>=0;<span style="color: #2f4f4f;"> </span>i&lt;3;<span style="color: #2f4f4f;"> </span>i++<span style="color: #5317ac;">)</span><span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">{</span>
 <span style="color: #2f4f4f;">    </span><span style="color: #5317ac;">auto</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">itB</span><span style="color: #005a5f;">(</span>r.basis<span style="color: #863927;">[</span>i<span style="color: #863927;">]</span>.begin<span style="color: #863927;">()</span><span style="color: #005a5f;">)</span>;
 <span style="color: #2f4f4f;">    </span>r.basis<span style="color: #005a5f;">[</span>i<span style="color: #005a5f;">]</span><span style="color: #2f4f4f;"> </span>=<span style="color: #2f4f4f;"> </span>crossProduct<span style="color: #005a5f;">(</span><span style="color: #2f4f4f;"> </span>c.basis<span style="color: #863927;">[</span><span style="color: #0000c0;">(</span>i+1<span style="color: #0000c0;">)</span><span style="color: #2f4f4f;"> </span>%<span style="color: #2f4f4f;"> </span>3<span style="color: #863927;">]</span>
 <span style="color: #2f4f4f;">                             </span>,<span style="color: #2f4f4f;"> </span>c.basis<span style="color: #863927;">[</span><span style="color: #0000c0;">(</span>i+2<span style="color: #0000c0;">)</span><span style="color: #2f4f4f;"> </span>%<span style="color: #2f4f4f;"> </span>3<span style="color: #863927;">]</span><span style="color: #005a5f;">)</span>;
 <span style="color: #2f4f4f;">    </span><span style="color: #0000c0;">std</span>::transform<span style="color: #005a5f;">(</span><span style="color: #2f4f4f;"> </span>itB,<span style="color: #2f4f4f;"> </span>itB<span style="color: #2f4f4f;"> </span>+<span style="color: #2f4f4f;"> </span>3,<span style="color: #2f4f4f;"> </span>itB
-<span style="color: #2f4f4f;">                  </span>,<span style="color: #2f4f4f;"> </span><span style="color: #863927;">[</span>&amp;<span style="color: #00538b;">c</span><span style="color: #863927;">](</span><span style="color: #8f0075;">double</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">i</span><span style="color: #863927;">){</span><span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">return</span><span style="color: #2f4f4f;"> </span>i*2*M_PI/c.volume;<span style="color: #2f4f4f;"> </span><span style="color: #863927;">}</span><span style="color: #005a5f;">)</span>;
+<span style="color: #2f4f4f;">                  </span>,<span style="color: #2f4f4f;"> </span><span style="color: #863927;">[</span>&amp;<span style="color: #00538b;">c</span><span style="color: #863927;">](</span><span style="color: #005a5f;">double</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">i</span><span style="color: #863927;">){</span><span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">return</span><span style="color: #2f4f4f;"> </span>i*2*M_PI/c.volume;<span style="color: #2f4f4f;"> </span><span style="color: #863927;">}</span><span style="color: #005a5f;">)</span>;
 <span style="color: #2f4f4f;">  </span><span style="color: #5317ac;">}</span>
 <span style="color: #2f4f4f;">  </span>r.volume<span style="color: #2f4f4f;"> </span>=<span style="color: #2f4f4f;"> </span>cellVolume<span style="color: #5317ac;">(</span>r<span style="color: #5317ac;">)</span>;
 <span style="color: #2f4f4f;">  </span><span style="color: #5317ac;">return</span><span style="color: #2f4f4f;"> </span>r;
@@ -468,13 +460,13 @@ Here we calculate the reciprocal cell of a given cell
 </div>
 </div>
 
-<div id="outline-container-org4f58d0c" class="outline-3">
-<h3 id="org4f58d0c"><code>WAVECAR</code> parsing</h3>
-<div class="outline-text-3" id="text-org4f58d0c">
+<div id="outline-container-org3fd2b25" class="outline-3">
+<h3 id="org3fd2b25"><code>WAVECAR</code> parsing</h3>
+<div class="outline-text-3" id="text-org3fd2b25">
 </div>
-<div id="outline-container-orgfff8a3c" class="outline-4">
-<h4 id="orgfff8a3c">Understanding the code</h4>
-<div class="outline-text-4" id="text-orgfff8a3c">
+<div id="outline-container-orgf5ea680" class="outline-4">
+<h4 id="orgf5ea680">Understanding the code</h4>
+<div class="outline-text-4" id="text-orgf5ea680">
 <p>
 It can be quite challenging sometimes to understand binary formats
 coming from Fortran, or binary formats in general. It is quite instructive
@@ -486,8 +478,8 @@ backwards engineer the main structure of the file.
 Here is an excerpt of a hexdump of a typical <code>VASP5</code> format <code>WAVECAR</code> file:
 </p>
 
-<div class="figure">
-<pre class="example">
+<div class="figure" id="org18b9bff">
+<pre class="example" id="orgff6a777">
                   BYTES      
  ADDRESS  1 2  3 4  4 6  7 8  | Comments
 ==============================|=========
@@ -551,49 +543,53 @@ channel and first \( k \)-point
 </div>
 </div>
 
-<div id="outline-container-orgdfa1472" class="outline-4">
-<h4 id="orgdfa1472">Wave descriptor</h4>
-<div class="outline-text-4" id="text-orgdfa1472">
+<div id="outline-container-org9278043" class="outline-4">
+<h4 id="org9278043">Wave descriptor</h4>
+<div class="outline-text-4" id="text-org9278043">
 <div class="org-src-container">
-<pre class="src src-c++"><span style="color: #0000c0;">std</span>::<span style="color: #8f0075;">pair</span><span style="color: #145c33;">&lt;</span>CellVector,<span style="color: #2f4f4f;"> </span>Band<span style="color: #145c33;">&gt;</span>
-<span style="color: #721045;">readWaveWaveDescriptor</span><span style="color: #145c33;">(</span><span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">const</span><span style="color: #2f4f4f;"> </span><span style="color: #0000c0;">std</span>::<span style="color: #8f0075;">string</span><span style="color: #2f4f4f;"> </span>&amp;<span style="color: #00538b;">fileName</span>
-<span style="color: #2f4f4f;">                      </span>,<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">const</span><span style="color: #2f4f4f;"> </span><span style="color: #8f0075;">WavecarHeader</span><span style="color: #2f4f4f;"> </span>&amp;<span style="color: #00538b;">header</span>
-<span style="color: #2f4f4f;">                      </span>,<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">const</span><span style="color: #2f4f4f;"> </span><span style="color: #8f0075;">size_t</span><span style="color: #2f4f4f;"> </span>&amp;<span style="color: #00538b;">spinIndex</span>
-<span style="color: #2f4f4f;">                      </span>,<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">const</span><span style="color: #2f4f4f;"> </span><span style="color: #8f0075;">size_t</span><span style="color: #2f4f4f;"> </span>&amp;<span style="color: #00538b;">kIndex</span>
+<pre class="src src-c++"><span style="color: #005a5f;">KBand</span>
+<span style="color: #721045;">readWaveWaveDescriptor</span><span style="color: #145c33;">(</span><span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">const</span><span style="color: #2f4f4f;"> </span><span style="color: #0000c0;">std</span>::<span style="color: #005a5f;">string</span><span style="color: #2f4f4f;"> </span>&amp;<span style="color: #00538b;">fileName</span>
+<span style="color: #2f4f4f;">                      </span>,<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">const</span><span style="color: #2f4f4f;"> </span><span style="color: #005a5f;">WavecarHeader</span><span style="color: #2f4f4f;"> </span>&amp;<span style="color: #00538b;">header</span>
+<span style="color: #2f4f4f;">                      </span>,<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">const</span><span style="color: #2f4f4f;"> </span><span style="color: #005a5f;">size_t</span><span style="color: #2f4f4f;"> </span>&amp;<span style="color: #00538b;">spinIndex</span>
 <span style="color: #2f4f4f;">                      </span><span style="color: #145c33;">)</span><span style="color: #2f4f4f;"> </span><span style="color: #145c33;">{</span>
 
-<span style="color: #2f4f4f;">  </span><span style="color: #0000c0;">std</span>::<span style="color: #8f0075;">vector</span><span style="color: #5317ac;">&lt;</span><span style="color: #8f0075;">double</span><span style="color: #5317ac;">&gt;</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">realEnergies</span><span style="color: #5317ac;">(</span>header.nBands<span style="color: #5317ac;">)</span>
+<span style="color: #2f4f4f;">  </span><span style="color: #0000c0;">std</span>::<span style="color: #005a5f;">vector</span><span style="color: #5317ac;">&lt;</span><span style="color: #005a5f;">double</span><span style="color: #5317ac;">&gt;</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">realEnergies</span><span style="color: #5317ac;">(</span>header.nBands<span style="color: #5317ac;">)</span>
 <span style="color: #2f4f4f;">    </span>,<span style="color: #2f4f4f;"> </span><span style="color: #00538b;">imagEnergies</span><span style="color: #5317ac;">(</span>header.nBands<span style="color: #5317ac;">)</span>
 <span style="color: #2f4f4f;">    </span>,<span style="color: #2f4f4f;"> </span><span style="color: #00538b;">occupancies</span><span style="color: #5317ac;">(</span>header.nBands<span style="color: #5317ac;">)</span>
 <span style="color: #2f4f4f;">    </span>;
 
-<span style="color: #2f4f4f;">  </span><span style="color: #8f0075;">double</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">buffer</span>,<span style="color: #2f4f4f;"> </span><span style="color: #00538b;">vbuffer</span><span style="color: #5317ac;">[</span>3<span style="color: #5317ac;">]</span>;
-<span style="color: #2f4f4f;">  </span><span style="color: #0000c0;">std</span>::<span style="color: #8f0075;">fstream</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">file</span><span style="color: #5317ac;">(</span>fileName,<span style="color: #2f4f4f;"> </span><span style="color: #0000c0;">std</span>::<span style="color: #0000c0;">ios</span>::binary<span style="color: #2f4f4f;"> </span>|<span style="color: #2f4f4f;"> </span><span style="color: #0000c0;">std</span>::<span style="color: #0000c0;">ios</span>::in<span style="color: #5317ac;">)</span>;
-<span style="color: #2f4f4f;">  </span><span style="color: #8f0075;">size_t</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">numberPlaneWaves</span>;
-<span style="color: #2f4f4f;">  </span><span style="color: #8f0075;">CellVector</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">kpoint</span>;
-<span style="color: #2f4f4f;">  </span><span style="color: #0000c0;">std</span>::<span style="color: #8f0075;">vector</span><span style="color: #5317ac;">&lt;</span><span style="color: #0000c0;">std</span>::<span style="color: #8f0075;">complex</span><span style="color: #005a5f;">&lt;</span><span style="color: #8f0075;">double</span><span style="color: #005a5f;">&gt;</span><span style="color: #5317ac;">&gt;</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">C</span>;
+<span style="color: #2f4f4f;">  </span><span style="color: #005a5f;">double</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">buffer</span>;
+<span style="color: #2f4f4f;">  </span><span style="color: #0000c0;">std</span>::<span style="color: #005a5f;">fstream</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">file</span><span style="color: #5317ac;">(</span>fileName,<span style="color: #2f4f4f;"> </span><span style="color: #0000c0;">std</span>::<span style="color: #0000c0;">ios</span>::binary<span style="color: #2f4f4f;"> </span>|<span style="color: #2f4f4f;"> </span><span style="color: #0000c0;">std</span>::<span style="color: #0000c0;">ios</span>::in<span style="color: #5317ac;">)</span>;
+<span style="color: #2f4f4f;">  </span><span style="color: #005a5f;">size_t</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">numberPlaneWaves</span>;
+<span style="color: #2f4f4f;">  </span><span style="color: #005a5f;">CellVector</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">kpoint</span>;
+<span style="color: #2f4f4f;">  </span><span style="color: #0000c0;">std</span>::<span style="color: #005a5f;">vector</span><span style="color: #5317ac;">&lt;</span>OrbitalCoefficients<span style="color: #5317ac;">&gt;</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">coefficients</span>;
 
 <span style="color: #2f4f4f;">  </span>file.seekg<span style="color: #5317ac;">(</span><span style="color: #005a5f;">(</span>spinIndex<span style="color: #2f4f4f;"> </span>+<span style="color: #2f4f4f;"> </span>2<span style="color: #005a5f;">)</span><span style="color: #2f4f4f;"> </span>*<span style="color: #2f4f4f;"> </span>header.recordLength<span style="color: #5317ac;">)</span>;
 
 <span style="color: #2f4f4f;">  </span><span style="color: #505050;">//</span><span style="color: #2f4f4f;"> </span><span style="color: #505050;">read</span><span style="color: #2f4f4f;"> </span><span style="color: #505050;">numberPlaneWaves</span>
-<span style="color: #2f4f4f;">  </span>file.read<span style="color: #5317ac;">(</span><span style="color: #005a5f;">(</span><span style="color: #8f0075;">char</span>*<span style="color: #005a5f;">)</span>&amp;buffer,<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">sizeof</span><span style="color: #005a5f;">(</span><span style="color: #8f0075;">double</span><span style="color: #005a5f;">)</span><span style="color: #5317ac;">)</span>;
+<span style="color: #2f4f4f;">  </span>file.read<span style="color: #5317ac;">(</span><span style="color: #005a5f;">(</span><span style="color: #005a5f;">char</span>*<span style="color: #005a5f;">)</span>&amp;buffer,<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">sizeof</span><span style="color: #005a5f;">(</span><span style="color: #005a5f;">double</span><span style="color: #005a5f;">)</span><span style="color: #5317ac;">)</span>;
 <span style="color: #2f4f4f;">  </span>numberPlaneWaves<span style="color: #2f4f4f;"> </span>=<span style="color: #2f4f4f;"> </span>size_t<span style="color: #5317ac;">(</span>buffer<span style="color: #5317ac;">)</span>;
 
-<span style="color: #2f4f4f;">  </span>C.resize<span style="color: #5317ac;">(</span>header.nBands<span style="color: #2f4f4f;"> </span>*<span style="color: #2f4f4f;"> </span>numberPlaneWaves<span style="color: #5317ac;">)</span>;
+<span style="color: #2f4f4f;">  </span><span style="color: #505050;">//</span><span style="color: #505050;">C.resize(header.nBands</span><span style="color: #2f4f4f;"> </span><span style="color: #505050;">*</span><span style="color: #2f4f4f;"> </span><span style="color: #505050;">numberPlaneWaves);</span>
 
-<span style="color: #2f4f4f;">  </span>file.read<span style="color: #5317ac;">(</span><span style="color: #005a5f;">(</span><span style="color: #8f0075;">char</span>*<span style="color: #005a5f;">)</span>&amp;kpoint,<span style="color: #2f4f4f;"> </span>3*<span style="color: #5317ac;">sizeof</span><span style="color: #005a5f;">(</span><span style="color: #8f0075;">double</span><span style="color: #005a5f;">)</span><span style="color: #5317ac;">)</span>;
+<span style="color: #2f4f4f;">  </span>file.read<span style="color: #5317ac;">(</span><span style="color: #005a5f;">(</span><span style="color: #005a5f;">char</span>*<span style="color: #005a5f;">)</span>&amp;kpoint,<span style="color: #2f4f4f;"> </span>3*<span style="color: #5317ac;">sizeof</span><span style="color: #005a5f;">(</span><span style="color: #005a5f;">double</span><span style="color: #005a5f;">)</span><span style="color: #5317ac;">)</span>;
 
-<span style="color: #2f4f4f;">  </span><span style="color: #5317ac;">for</span><span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">(</span><span style="color: #8f0075;">size_t</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">n</span>=0;<span style="color: #2f4f4f;"> </span>n<span style="color: #2f4f4f;"> </span>&lt;<span style="color: #2f4f4f;"> </span>header.nBands;<span style="color: #2f4f4f;"> </span>n++<span style="color: #5317ac;">)</span><span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">{</span>
-<span style="color: #2f4f4f;">    </span>file.read<span style="color: #005a5f;">(</span><span style="color: #863927;">(</span><span style="color: #8f0075;">char</span>*<span style="color: #863927;">)(</span>realEnergies.data<span style="color: #0000c0;">()</span><span style="color: #2f4f4f;"> </span>+<span style="color: #2f4f4f;"> </span>n<span style="color: #863927;">)</span>,<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">sizeof</span><span style="color: #863927;">(</span><span style="color: #8f0075;">double</span><span style="color: #863927;">)</span><span style="color: #005a5f;">)</span>;
-<span style="color: #2f4f4f;">    </span>file.read<span style="color: #005a5f;">(</span><span style="color: #863927;">(</span><span style="color: #8f0075;">char</span>*<span style="color: #863927;">)(</span>imagEnergies.data<span style="color: #0000c0;">()</span><span style="color: #2f4f4f;"> </span>+<span style="color: #2f4f4f;"> </span>n<span style="color: #863927;">)</span>,<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">sizeof</span><span style="color: #863927;">(</span><span style="color: #8f0075;">double</span><span style="color: #863927;">)</span><span style="color: #005a5f;">)</span>;
-<span style="color: #2f4f4f;">    </span>file.read<span style="color: #005a5f;">(</span><span style="color: #863927;">(</span><span style="color: #8f0075;">char</span>*<span style="color: #863927;">)(</span>occupancies.data<span style="color: #0000c0;">()</span><span style="color: #2f4f4f;"> </span>+<span style="color: #2f4f4f;"> </span>n<span style="color: #863927;">)</span>,<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">sizeof</span><span style="color: #863927;">(</span><span style="color: #8f0075;">double</span><span style="color: #863927;">)</span><span style="color: #005a5f;">)</span>;
+<span style="color: #2f4f4f;">  </span><span style="color: #5317ac;">for</span><span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">(</span><span style="color: #005a5f;">size_t</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">n</span>=0;<span style="color: #2f4f4f;"> </span>n<span style="color: #2f4f4f;"> </span>&lt;<span style="color: #2f4f4f;"> </span>header.nBands;<span style="color: #2f4f4f;"> </span>n++<span style="color: #5317ac;">)</span><span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">{</span>
+<span style="color: #2f4f4f;">    </span>file.read<span style="color: #005a5f;">(</span><span style="color: #863927;">(</span><span style="color: #005a5f;">char</span>*<span style="color: #863927;">)(</span>realEnergies.data<span style="color: #0000c0;">()</span><span style="color: #2f4f4f;"> </span>+<span style="color: #2f4f4f;"> </span>n<span style="color: #863927;">)</span>,<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">sizeof</span><span style="color: #863927;">(</span><span style="color: #005a5f;">double</span><span style="color: #863927;">)</span><span style="color: #005a5f;">)</span>;
+<span style="color: #2f4f4f;">    </span>file.read<span style="color: #005a5f;">(</span><span style="color: #863927;">(</span><span style="color: #005a5f;">char</span>*<span style="color: #863927;">)(</span>imagEnergies.data<span style="color: #0000c0;">()</span><span style="color: #2f4f4f;"> </span>+<span style="color: #2f4f4f;"> </span>n<span style="color: #863927;">)</span>,<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">sizeof</span><span style="color: #863927;">(</span><span style="color: #005a5f;">double</span><span style="color: #863927;">)</span><span style="color: #005a5f;">)</span>;
+<span style="color: #2f4f4f;">    </span>file.read<span style="color: #005a5f;">(</span><span style="color: #863927;">(</span><span style="color: #005a5f;">char</span>*<span style="color: #863927;">)(</span>occupancies.data<span style="color: #0000c0;">()</span><span style="color: #2f4f4f;"> </span>+<span style="color: #2f4f4f;"> </span>n<span style="color: #863927;">)</span>,<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">sizeof</span><span style="color: #863927;">(</span><span style="color: #005a5f;">double</span><span style="color: #863927;">)</span><span style="color: #005a5f;">)</span>;
 <span style="color: #2f4f4f;">  </span><span style="color: #5317ac;">}</span>
 
-<span style="color: #2f4f4f;">  </span><span style="color: #5317ac;">for</span><span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">(</span><span style="color: #8f0075;">size_t</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">n</span>=0;<span style="color: #2f4f4f;"> </span>n<span style="color: #2f4f4f;"> </span>&lt;<span style="color: #2f4f4f;"> </span>header.nBands<span style="color: #2f4f4f;"> </span>*<span style="color: #2f4f4f;"> </span>numberPlaneWaves;<span style="color: #2f4f4f;"> </span>n++<span style="color: #5317ac;">)</span><span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">{</span>
-<span style="color: #2f4f4f;">    </span>file.read<span style="color: #005a5f;">(</span><span style="color: #863927;">(</span><span style="color: #8f0075;">char</span>*<span style="color: #863927;">)</span>&amp;C<span style="color: #863927;">[</span>n<span style="color: #863927;">]</span>,<span style="color: #2f4f4f;"> </span>2*<span style="color: #5317ac;">sizeof</span><span style="color: #863927;">(</span><span style="color: #8f0075;">double</span><span style="color: #863927;">)</span><span style="color: #005a5f;">)</span>;
+<span style="color: #2f4f4f;">  </span><span style="color: #5317ac;">for</span><span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">(</span><span style="color: #005a5f;">size_t</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">n</span>=0;<span style="color: #2f4f4f;"> </span>n<span style="color: #2f4f4f;"> </span>&lt;<span style="color: #2f4f4f;"> </span>header.nBands;<span style="color: #2f4f4f;"> </span>n++<span style="color: #5317ac;">)</span><span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">{</span>
+<span style="color: #2f4f4f;">    </span><span style="color: #005a5f;">OrbitalCoefficients</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">C</span>;
+<span style="color: #2f4f4f;">    </span>C.resize<span style="color: #005a5f;">(</span>numberPlaneWaves<span style="color: #005a5f;">)</span>;
+<span style="color: #2f4f4f;">    </span>coefficients.push_back<span style="color: #005a5f;">(</span>C<span style="color: #005a5f;">)</span>;
+<span style="color: #2f4f4f;">    </span>file.read<span style="color: #005a5f;">(</span><span style="color: #863927;">(</span><span style="color: #005a5f;">char</span>*<span style="color: #863927;">)</span>C.data<span style="color: #863927;">()</span>,<span style="color: #2f4f4f;"> </span>numberPlaneWaves<span style="color: #2f4f4f;"> </span>*<span style="color: #2f4f4f;"> </span>2<span style="color: #2f4f4f;"> </span>*<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">sizeof</span><span style="color: #863927;">(</span><span style="color: #005a5f;">double</span><span style="color: #863927;">)</span><span style="color: #005a5f;">)</span>;
 <span style="color: #2f4f4f;">  </span><span style="color: #5317ac;">}</span>
 
-<span style="color: #2f4f4f;">  </span><span style="color: #5317ac;">return</span><span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">{</span>kpoint,<span style="color: #2f4f4f;"> </span>C<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">}</span>;
+<span style="color: #2f4f4f;">  </span><span style="color: #5317ac;">return</span><span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">{</span><span style="color: #2f4f4f;"> </span>kpoint
+<span style="color: #2f4f4f;">         </span>,<span style="color: #2f4f4f;"> </span><span style="color: #005a5f;">{</span>realEnergies,<span style="color: #2f4f4f;"> </span>imagEnergies,<span style="color: #2f4f4f;"> </span>occupancies,<span style="color: #2f4f4f;"> </span>coefficients<span style="color: #005a5f;">}</span>
+<span style="color: #2f4f4f;">         </span><span style="color: #5317ac;">}</span>;
 
 <span style="color: #145c33;">}</span>
 </pre>
@@ -601,26 +597,26 @@ channel and first \( k \)-point
 </div>
 </div>
 
-<div id="outline-container-org497fbf2" class="outline-4">
-<h4 id="org497fbf2">Header</h4>
-<div class="outline-text-4" id="text-org497fbf2">
+<div id="outline-container-org64614c5" class="outline-4">
+<h4 id="org64614c5">Header</h4>
+<div class="outline-text-4" id="text-org64614c5">
 <div class="org-src-container">
-<pre class="src src-c++"><span style="color: #8f0075;">WavecarHeader</span><span style="color: #2f4f4f;"> </span><span style="color: #721045;">readWavecarHeader</span><span style="color: #145c33;">(</span><span style="color: #5317ac;">const</span><span style="color: #2f4f4f;"> </span><span style="color: #0000c0;">std</span>::<span style="color: #8f0075;">string</span><span style="color: #2f4f4f;"> </span>&amp;<span style="color: #00538b;">fileName</span><span style="color: #145c33;">)</span><span style="color: #2f4f4f;"> </span><span style="color: #145c33;">{</span>
-<span style="color: #2f4f4f;">  </span><span style="color: #8f0075;">WavecarHeader</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">header</span>;
-<span style="color: #2f4f4f;">  </span><span style="color: #0000c0;">std</span>::<span style="color: #8f0075;">fstream</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">file</span><span style="color: #5317ac;">(</span>fileName,<span style="color: #2f4f4f;"> </span><span style="color: #0000c0;">std</span>::<span style="color: #0000c0;">ios</span>::binary<span style="color: #2f4f4f;"> </span>|<span style="color: #2f4f4f;"> </span><span style="color: #0000c0;">std</span>::<span style="color: #0000c0;">ios</span>::in<span style="color: #5317ac;">)</span>;
-<span style="color: #2f4f4f;">  </span><span style="color: #8f0075;">double</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">buffer</span>,<span style="color: #2f4f4f;"> </span><span style="color: #00538b;">vbuffer</span><span style="color: #5317ac;">[</span>3<span style="color: #5317ac;">]</span>;
-<span style="color: #2f4f4f;">  </span><span style="color: #0000c0;">std</span>::<span style="color: #8f0075;">vector</span><span style="color: #5317ac;">&lt;</span><span style="color: #8f0075;">double</span><span style="color: #5317ac;">&gt;</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">vvbuffer</span>;
+<pre class="src src-c++"><span style="color: #005a5f;">WavecarHeader</span><span style="color: #2f4f4f;"> </span><span style="color: #721045;">readWavecarHeader</span><span style="color: #145c33;">(</span><span style="color: #5317ac;">const</span><span style="color: #2f4f4f;"> </span><span style="color: #0000c0;">std</span>::<span style="color: #005a5f;">string</span><span style="color: #2f4f4f;"> </span>&amp;<span style="color: #00538b;">fileName</span><span style="color: #145c33;">)</span><span style="color: #2f4f4f;"> </span><span style="color: #145c33;">{</span>
+<span style="color: #2f4f4f;">  </span><span style="color: #005a5f;">WavecarHeader</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">header</span>;
+<span style="color: #2f4f4f;">  </span><span style="color: #0000c0;">std</span>::<span style="color: #005a5f;">fstream</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">file</span><span style="color: #5317ac;">(</span>fileName,<span style="color: #2f4f4f;"> </span><span style="color: #0000c0;">std</span>::<span style="color: #0000c0;">ios</span>::binary<span style="color: #2f4f4f;"> </span>|<span style="color: #2f4f4f;"> </span><span style="color: #0000c0;">std</span>::<span style="color: #0000c0;">ios</span>::in<span style="color: #5317ac;">)</span>;
+<span style="color: #2f4f4f;">  </span><span style="color: #005a5f;">double</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">buffer</span>;
+<span style="color: #2f4f4f;">  </span><span style="color: #0000c0;">std</span>::<span style="color: #005a5f;">vector</span><span style="color: #5317ac;">&lt;</span><span style="color: #005a5f;">double</span><span style="color: #5317ac;">&gt;</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">vvbuffer</span>;
 <span style="color: #2f4f4f;">  </span><span style="color: #505050;">//</span><span style="color: #2f4f4f;"> </span><span style="color: #505050;">const</span><span style="color: #2f4f4f;"> </span><span style="color: #505050;">double</span><span style="color: #2f4f4f;"> </span><span style="color: #505050;">hbarConst</span><span style="color: #2f4f4f;"> </span><span style="color: #505050;">=</span><span style="color: #2f4f4f;"> </span><span style="color: #505050;">0.26246582250210965422;</span><span style="color: #2f4f4f;"> </span><span style="color: #505050;">//</span><span style="color: #2f4f4f;"> </span><span style="color: #505050;">1/eV</span><span style="color: #2f4f4f;"> </span><span style="color: #505050;">Ang^2</span>
 
-<span style="color: #2f4f4f;">  </span>assert<span style="color: #5317ac;">(</span><span style="color: #5317ac;">sizeof</span><span style="color: #005a5f;">(</span><span style="color: #8f0075;">double</span><span style="color: #005a5f;">)</span><span style="color: #2f4f4f;"> </span>==<span style="color: #2f4f4f;"> </span>8<span style="color: #5317ac;">)</span>;
+<span style="color: #2f4f4f;">  </span>assert<span style="color: #5317ac;">(</span><span style="color: #5317ac;">sizeof</span><span style="color: #005a5f;">(</span><span style="color: #005a5f;">double</span><span style="color: #005a5f;">)</span><span style="color: #2f4f4f;"> </span>==<span style="color: #2f4f4f;"> </span>8<span style="color: #5317ac;">)</span>;
 <span style="color: #2f4f4f;">  </span>assert<span style="color: #5317ac;">(</span><span style="color: #5317ac;">sizeof</span><span style="color: #005a5f;">(</span>header.real.basis<span style="color: #005a5f;">)</span><span style="color: #2f4f4f;"> </span>==<span style="color: #2f4f4f;"> </span>72<span style="color: #5317ac;">)</span>;
-<span style="color: #2f4f4f;">  </span>assert<span style="color: #5317ac;">(</span><span style="color: #5317ac;">sizeof</span><span style="color: #005a5f;">(</span>CellVector<span style="color: #005a5f;">)</span><span style="color: #2f4f4f;"> </span>==<span style="color: #2f4f4f;"> </span>3<span style="color: #2f4f4f;"> </span>*<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">sizeof</span><span style="color: #005a5f;">(</span><span style="color: #8f0075;">double</span><span style="color: #005a5f;">)</span><span style="color: #5317ac;">)</span>;
+<span style="color: #2f4f4f;">  </span>assert<span style="color: #5317ac;">(</span><span style="color: #5317ac;">sizeof</span><span style="color: #005a5f;">(</span>CellVector<span style="color: #005a5f;">)</span><span style="color: #2f4f4f;"> </span>==<span style="color: #2f4f4f;"> </span>3<span style="color: #2f4f4f;"> </span>*<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">sizeof</span><span style="color: #005a5f;">(</span><span style="color: #005a5f;">double</span><span style="color: #005a5f;">)</span><span style="color: #5317ac;">)</span>;
 
-<span style="color: #2f4f4f;">  </span>file.read<span style="color: #5317ac;">(</span><span style="color: #005a5f;">(</span><span style="color: #8f0075;">char</span>*<span style="color: #005a5f;">)</span>&amp;buffer,<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">sizeof</span><span style="color: #005a5f;">(</span><span style="color: #8f0075;">double</span><span style="color: #005a5f;">)</span><span style="color: #5317ac;">)</span>;
+<span style="color: #2f4f4f;">  </span>file.read<span style="color: #5317ac;">(</span><span style="color: #005a5f;">(</span><span style="color: #005a5f;">char</span>*<span style="color: #005a5f;">)</span>&amp;buffer,<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">sizeof</span><span style="color: #005a5f;">(</span><span style="color: #005a5f;">double</span><span style="color: #005a5f;">)</span><span style="color: #5317ac;">)</span>;
 <span style="color: #2f4f4f;">  </span>header.recordLength<span style="color: #2f4f4f;"> </span>=<span style="color: #2f4f4f;"> </span>size_t<span style="color: #5317ac;">(</span>buffer<span style="color: #5317ac;">)</span>;
-<span style="color: #2f4f4f;">  </span>file.read<span style="color: #5317ac;">(</span><span style="color: #005a5f;">(</span><span style="color: #8f0075;">char</span>*<span style="color: #005a5f;">)</span>&amp;buffer,<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">sizeof</span><span style="color: #005a5f;">(</span><span style="color: #8f0075;">double</span><span style="color: #005a5f;">)</span><span style="color: #5317ac;">)</span>;
+<span style="color: #2f4f4f;">  </span>file.read<span style="color: #5317ac;">(</span><span style="color: #005a5f;">(</span><span style="color: #005a5f;">char</span>*<span style="color: #005a5f;">)</span>&amp;buffer,<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">sizeof</span><span style="color: #005a5f;">(</span><span style="color: #005a5f;">double</span><span style="color: #005a5f;">)</span><span style="color: #5317ac;">)</span>;
 <span style="color: #2f4f4f;">  </span>header.nSpin<span style="color: #2f4f4f;"> </span>=<span style="color: #2f4f4f;"> </span>size_t<span style="color: #5317ac;">(</span>buffer<span style="color: #5317ac;">)</span>;
-<span style="color: #2f4f4f;">  </span>file.read<span style="color: #5317ac;">(</span><span style="color: #005a5f;">(</span><span style="color: #8f0075;">char</span>*<span style="color: #005a5f;">)</span>&amp;buffer,<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">sizeof</span><span style="color: #005a5f;">(</span><span style="color: #8f0075;">double</span><span style="color: #005a5f;">)</span><span style="color: #5317ac;">)</span>;
+<span style="color: #2f4f4f;">  </span>file.read<span style="color: #5317ac;">(</span><span style="color: #005a5f;">(</span><span style="color: #005a5f;">char</span>*<span style="color: #005a5f;">)</span>&amp;buffer,<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">sizeof</span><span style="color: #005a5f;">(</span><span style="color: #005a5f;">double</span><span style="color: #005a5f;">)</span><span style="color: #5317ac;">)</span>;
 <span style="color: #2f4f4f;">  </span>header.version<span style="color: #2f4f4f;"> </span>=<span style="color: #2f4f4f;"> </span>size_t<span style="color: #5317ac;">(</span>buffer<span style="color: #5317ac;">)</span>;
 
 <span style="color: #2f4f4f;">  </span><span style="color: #5317ac;">if</span><span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">(</span>header.version<span style="color: #2f4f4f;"> </span>!=<span style="color: #2f4f4f;"> </span>53300<span style="color: #5317ac;">)</span>
@@ -628,18 +624,18 @@ channel and first \( k \)-point
 
 <span style="color: #2f4f4f;">  </span>file.seekg<span style="color: #5317ac;">(</span>header.recordLength<span style="color: #5317ac;">)</span>;
 
-<span style="color: #2f4f4f;">  </span>file.read<span style="color: #5317ac;">(</span><span style="color: #005a5f;">(</span><span style="color: #8f0075;">char</span>*<span style="color: #005a5f;">)</span>&amp;buffer,<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">sizeof</span><span style="color: #005a5f;">(</span><span style="color: #8f0075;">double</span><span style="color: #005a5f;">)</span><span style="color: #5317ac;">)</span>;
+<span style="color: #2f4f4f;">  </span>file.read<span style="color: #5317ac;">(</span><span style="color: #005a5f;">(</span><span style="color: #005a5f;">char</span>*<span style="color: #005a5f;">)</span>&amp;buffer,<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">sizeof</span><span style="color: #005a5f;">(</span><span style="color: #005a5f;">double</span><span style="color: #005a5f;">)</span><span style="color: #5317ac;">)</span>;
 <span style="color: #2f4f4f;">  </span>header.nKpoints<span style="color: #2f4f4f;"> </span>=<span style="color: #2f4f4f;"> </span>size_t<span style="color: #5317ac;">(</span>buffer<span style="color: #5317ac;">)</span>;
-<span style="color: #2f4f4f;">  </span>file.read<span style="color: #5317ac;">(</span><span style="color: #005a5f;">(</span><span style="color: #8f0075;">char</span>*<span style="color: #005a5f;">)</span>&amp;buffer,<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">sizeof</span><span style="color: #005a5f;">(</span><span style="color: #8f0075;">double</span><span style="color: #005a5f;">)</span><span style="color: #5317ac;">)</span>;
+<span style="color: #2f4f4f;">  </span>file.read<span style="color: #5317ac;">(</span><span style="color: #005a5f;">(</span><span style="color: #005a5f;">char</span>*<span style="color: #005a5f;">)</span>&amp;buffer,<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">sizeof</span><span style="color: #005a5f;">(</span><span style="color: #005a5f;">double</span><span style="color: #005a5f;">)</span><span style="color: #5317ac;">)</span>;
 <span style="color: #2f4f4f;">  </span>header.nBands<span style="color: #2f4f4f;"> </span>=<span style="color: #2f4f4f;"> </span>size_t<span style="color: #5317ac;">(</span>buffer<span style="color: #5317ac;">)</span>;
-<span style="color: #2f4f4f;">  </span>file.read<span style="color: #5317ac;">(</span><span style="color: #005a5f;">(</span><span style="color: #8f0075;">char</span>*<span style="color: #005a5f;">)</span>&amp;buffer,<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">sizeof</span><span style="color: #005a5f;">(</span><span style="color: #8f0075;">double</span><span style="color: #005a5f;">)</span><span style="color: #5317ac;">)</span>;
+<span style="color: #2f4f4f;">  </span>file.read<span style="color: #5317ac;">(</span><span style="color: #005a5f;">(</span><span style="color: #005a5f;">char</span>*<span style="color: #005a5f;">)</span>&amp;buffer,<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">sizeof</span><span style="color: #005a5f;">(</span><span style="color: #005a5f;">double</span><span style="color: #005a5f;">)</span><span style="color: #5317ac;">)</span>;
 <span style="color: #2f4f4f;">  </span>header.encut<span style="color: #2f4f4f;"> </span>=<span style="color: #2f4f4f;"> </span>size_t<span style="color: #5317ac;">(</span>buffer<span style="color: #5317ac;">)</span>;
 
 <span style="color: #2f4f4f;">  </span><span style="color: #505050;">//</span><span style="color: #2f4f4f;"> </span><span style="color: #505050;">Setup</span><span style="color: #2f4f4f;"> </span><span style="color: #505050;">real</span><span style="color: #2f4f4f;"> </span><span style="color: #505050;">cell</span>
-<span style="color: #2f4f4f;">  </span>file.read<span style="color: #5317ac;">(</span><span style="color: #005a5f;">(</span><span style="color: #8f0075;">char</span>*<span style="color: #005a5f;">)</span>&amp;header.real.basis,<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">sizeof</span><span style="color: #005a5f;">(</span>header.real.basis<span style="color: #005a5f;">)</span><span style="color: #5317ac;">)</span>;
+<span style="color: #2f4f4f;">  </span>file.read<span style="color: #5317ac;">(</span><span style="color: #005a5f;">(</span><span style="color: #005a5f;">char</span>*<span style="color: #005a5f;">)</span>&amp;header.real.basis,<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">sizeof</span><span style="color: #005a5f;">(</span>header.real.basis<span style="color: #005a5f;">)</span><span style="color: #5317ac;">)</span>;
 <span style="color: #2f4f4f;">  </span>header.real.volume<span style="color: #2f4f4f;"> </span>=<span style="color: #2f4f4f;"> </span>cellVolume<span style="color: #5317ac;">(</span>header.real<span style="color: #5317ac;">)</span>;
 
-<span style="color: #2f4f4f;">  </span>file.read<span style="color: #5317ac;">(</span><span style="color: #005a5f;">(</span><span style="color: #8f0075;">char</span>*<span style="color: #005a5f;">)</span>&amp;buffer,<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">sizeof</span><span style="color: #005a5f;">(</span><span style="color: #8f0075;">double</span><span style="color: #005a5f;">)</span><span style="color: #5317ac;">)</span>;
+<span style="color: #2f4f4f;">  </span>file.read<span style="color: #5317ac;">(</span><span style="color: #005a5f;">(</span><span style="color: #005a5f;">char</span>*<span style="color: #005a5f;">)</span>&amp;buffer,<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">sizeof</span><span style="color: #005a5f;">(</span><span style="color: #005a5f;">double</span><span style="color: #005a5f;">)</span><span style="color: #5317ac;">)</span>;
 <span style="color: #2f4f4f;">  </span>header.eFermi<span style="color: #2f4f4f;"> </span>=<span style="color: #2f4f4f;"> </span>buffer;
 
 <span style="color: #2f4f4f;">  </span><span style="color: #505050;">//</span><span style="color: #2f4f4f;"> </span><span style="color: #505050;">Setup</span><span style="color: #2f4f4f;"> </span><span style="color: #505050;">Reciprocal</span><span style="color: #2f4f4f;"> </span><span style="color: #505050;">cell</span>
@@ -654,23 +650,23 @@ channel and first \( k \)-point
 </div>
 </div>
 
-<div id="outline-container-orgdf5894a" class="outline-4">
-<h4 id="orgdf5894a">The whole <code>WAVECAR</code></h4>
-<div class="outline-text-4" id="text-orgdf5894a">
+<div id="outline-container-orgdc45c33" class="outline-4">
+<h4 id="orgdc45c33">The whole <code>WAVECAR</code></h4>
+<div class="outline-text-4" id="text-orgdc45c33">
 <div class="org-src-container">
-<pre class="src src-c++"><span style="color: #8f0075;">Wavecar</span><span style="color: #2f4f4f;"> </span><span style="color: #721045;">readWavecar</span><span style="color: #145c33;">(</span><span style="color: #5317ac;">const</span><span style="color: #2f4f4f;"> </span><span style="color: #0000c0;">std</span>::<span style="color: #8f0075;">string</span><span style="color: #2f4f4f;"> </span>&amp;<span style="color: #00538b;">fileName</span><span style="color: #145c33;">)</span><span style="color: #2f4f4f;"> </span><span style="color: #145c33;">{</span>
+<pre class="src src-c++"><span style="color: #005a5f;">Wavecar</span><span style="color: #2f4f4f;"> </span><span style="color: #721045;">readWavecar</span><span style="color: #145c33;">(</span><span style="color: #5317ac;">const</span><span style="color: #2f4f4f;"> </span><span style="color: #0000c0;">std</span>::<span style="color: #005a5f;">string</span><span style="color: #2f4f4f;"> </span>&amp;<span style="color: #00538b;">fileName</span><span style="color: #145c33;">)</span><span style="color: #2f4f4f;"> </span><span style="color: #145c33;">{</span>
 <span style="color: #2f4f4f;">  </span><span style="color: #5317ac;">auto</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">header</span><span style="color: #5317ac;">(</span>readWavecarHeader<span style="color: #005a5f;">(</span>fileName<span style="color: #005a5f;">)</span><span style="color: #5317ac;">)</span>;
-<span style="color: #2f4f4f;">  </span><span style="color: #8f0075;">WaveDescriptor</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">descriptor</span>;
+<span style="color: #2f4f4f;">  </span><span style="color: #0000c0;">std</span>::<span style="color: #005a5f;">vector</span><span style="color: #5317ac;">&lt;</span>WaveDescriptor<span style="color: #5317ac;">&gt;</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">descriptors</span>;
 
-<span style="color: #2f4f4f;">  </span><span style="color: #5317ac;">for</span><span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">(</span><span style="color: #8f0075;">uint8_t</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">i</span>=0;<span style="color: #2f4f4f;"> </span>i<span style="color: #2f4f4f;"> </span>&lt;<span style="color: #2f4f4f;"> </span>header.nSpin;<span style="color: #2f4f4f;"> </span>i++<span style="color: #5317ac;">)</span><span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">{</span>
-<span style="color: #2f4f4f;">    </span><span style="color: #8f0075;">KBand</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">band</span>;
-<span style="color: #2f4f4f;">    </span><span style="color: #5317ac;">for</span><span style="color: #2f4f4f;"> </span><span style="color: #005a5f;">(</span><span style="color: #8f0075;">size_t</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">k</span>=0;<span style="color: #2f4f4f;"> </span>k<span style="color: #2f4f4f;"> </span>&lt;<span style="color: #2f4f4f;"> </span>header.nKpoints;<span style="color: #2f4f4f;"> </span>k++<span style="color: #005a5f;">)</span><span style="color: #2f4f4f;"> </span><span style="color: #005a5f;">{</span>
-<span style="color: #2f4f4f;">      </span><span style="color: #5317ac;">auto</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">pair</span><span style="color: #863927;">(</span>readWaveWaveDescriptor<span style="color: #0000c0;">(</span>fileName,<span style="color: #2f4f4f;"> </span>header,<span style="color: #2f4f4f;"> </span>i,<span style="color: #2f4f4f;"> </span>k<span style="color: #0000c0;">)</span><span style="color: #863927;">)</span>;
-<span style="color: #2f4f4f;">      </span>band.emplace<span style="color: #863927;">(</span>pair<span style="color: #863927;">)</span>;
+<span style="color: #2f4f4f;">  </span><span style="color: #5317ac;">for</span><span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">(</span><span style="color: #005a5f;">uint8_t</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">i</span>=0;<span style="color: #2f4f4f;"> </span>i<span style="color: #2f4f4f;"> </span>&lt;<span style="color: #2f4f4f;"> </span>header.nSpin;<span style="color: #2f4f4f;"> </span>i++<span style="color: #5317ac;">)</span><span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">{</span>
+<span style="color: #2f4f4f;">    </span><span style="color: #005a5f;">WaveDescriptor</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">descriptor</span>;
+<span style="color: #2f4f4f;">    </span><span style="color: #5317ac;">for</span><span style="color: #2f4f4f;"> </span><span style="color: #005a5f;">(</span><span style="color: #005a5f;">size_t</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">k</span>=0;<span style="color: #2f4f4f;"> </span>k<span style="color: #2f4f4f;"> </span>&lt;<span style="color: #2f4f4f;"> </span>header.nKpoints;<span style="color: #2f4f4f;"> </span>k++<span style="color: #005a5f;">)</span><span style="color: #2f4f4f;"> </span><span style="color: #005a5f;">{</span>
+<span style="color: #2f4f4f;">      </span><span style="color: #5317ac;">auto</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">kBand</span><span style="color: #863927;">(</span>readWaveWaveDescriptor<span style="color: #0000c0;">(</span>fileName,<span style="color: #2f4f4f;"> </span>header,<span style="color: #2f4f4f;"> </span>i<span style="color: #0000c0;">)</span><span style="color: #863927;">)</span>;
+<span style="color: #2f4f4f;">      </span>descriptor.bands.push_back<span style="color: #863927;">(</span>kBand<span style="color: #863927;">)</span>;
 <span style="color: #2f4f4f;">    </span><span style="color: #005a5f;">}</span>
-<span style="color: #2f4f4f;">    </span>descriptor.bands.push_back<span style="color: #005a5f;">(</span>band<span style="color: #005a5f;">)</span>;
+<span style="color: #2f4f4f;">    </span>descriptors.push_back<span style="color: #005a5f;">(</span>descriptor<span style="color: #005a5f;">)</span>;
 <span style="color: #2f4f4f;">  </span><span style="color: #5317ac;">}</span>
-<span style="color: #2f4f4f;">  </span><span style="color: #5317ac;">return</span><span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">{</span>header,<span style="color: #2f4f4f;"> </span>descriptor<span style="color: #5317ac;">}</span>;
+<span style="color: #2f4f4f;">  </span><span style="color: #5317ac;">return</span><span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">{</span>header,<span style="color: #2f4f4f;"> </span>descriptors<span style="color: #5317ac;">}</span>;
 
 <span style="color: #145c33;">}</span>
 </pre>
@@ -680,13 +676,142 @@ channel and first \( k \)-point
 </div>
 
 
-<div id="outline-container-org26d6f13" class="outline-3">
-<h3 id="org26d6f13">Main function</h3>
-<div class="outline-text-3" id="text-org26d6f13">
+<div id="outline-container-org9212da8" class="outline-3">
+<h3 id="org9212da8"><code>WAVECAR</code> writing</h3>
+<div class="outline-text-3" id="text-org9212da8">
+<p>
+Our writer writes <code>WAVECAR</code> files in the <code>VASP5</code> version.
+</p>
+</div>
+
+<div id="outline-container-orgc91b19e" class="outline-4">
+<h4 id="orgc91b19e"><code>CellVector</code></h4>
+<div class="outline-text-4" id="text-orgc91b19e">
 <div class="org-src-container">
-<pre class="src src-c++"><span style="color: #8f0075;">int</span><span style="color: #2f4f4f;"> </span><span style="color: #721045;">main</span><span style="color: #2f4f4f;"> </span><span style="color: #145c33;">(</span><span style="color: #8f0075;">int</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">argc</span>,<span style="color: #2f4f4f;"> </span><span style="color: #8f0075;">char</span><span style="color: #2f4f4f;"> </span>**<span style="color: #00538b;">argv</span><span style="color: #145c33;">)</span><span style="color: #2f4f4f;"> </span><span style="color: #145c33;">{</span>
-<span style="color: #2f4f4f;">  </span><span style="color: #0000c0;">std</span>::cout<span style="color: #2f4f4f;"> </span>&lt;&lt;<span style="color: #2f4f4f;"> </span><span style="color: #2544bb;">"WAVIS"</span><span style="color: #2f4f4f;"> </span>&lt;&lt;<span style="color: #2f4f4f;"> </span><span style="color: #0000c0;">std</span>::endl;
-<span style="color: #2f4f4f;">  </span><span style="color: #0000c0;">std</span>::cout<span style="color: #2f4f4f;"> </span>&lt;&lt;<span style="color: #2f4f4f;"> </span><span style="color: #2544bb;">"====="</span><span style="color: #2f4f4f;"> </span>&lt;&lt;<span style="color: #2f4f4f;"> </span><span style="color: #0000c0;">std</span>::endl;
+<pre class="src src-c++"><span style="color: #005a5f;">void</span><span style="color: #2f4f4f;"> </span><span style="color: #721045;">writeToWavecar</span><span style="color: #145c33;">(</span><span style="color: #0000c0;">std</span>::<span style="color: #005a5f;">ofstream</span><span style="color: #2f4f4f;"> </span>&amp;<span style="color: #00538b;">f</span>,<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">const</span><span style="color: #2f4f4f;"> </span><span style="color: #005a5f;">CellVector</span><span style="color: #2f4f4f;"> </span>&amp;<span style="color: #00538b;">v</span><span style="color: #145c33;">)</span><span style="color: #2f4f4f;"> </span><span style="color: #145c33;">{</span>
+<span style="color: #2f4f4f;">  </span>f.write<span style="color: #5317ac;">(</span><span style="color: #005a5f;">(</span><span style="color: #005a5f;">char</span>*<span style="color: #005a5f;">)</span>v.data<span style="color: #005a5f;">()</span>,<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">sizeof</span><span style="color: #005a5f;">(</span>CellVector<span style="color: #005a5f;">)</span><span style="color: #5317ac;">)</span>;
+<span style="color: #145c33;">}</span>
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orgea788c4" class="outline-4">
+<h4 id="orgea788c4"><code>Cell</code></h4>
+<div class="outline-text-4" id="text-orgea788c4">
+<p>
+In the case of a cell we only write the basis elements in order,
+</p>
+<div class="org-src-container">
+<pre class="src src-c++"><span style="color: #005a5f;">void</span><span style="color: #2f4f4f;"> </span><span style="color: #721045;">writeToWavecar</span><span style="color: #145c33;">(</span><span style="color: #0000c0;">std</span>::<span style="color: #005a5f;">ofstream</span><span style="color: #2f4f4f;"> </span>&amp;<span style="color: #00538b;">f</span>,<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">const</span><span style="color: #2f4f4f;"> </span><span style="color: #005a5f;">Cell</span><span style="color: #2f4f4f;"> </span>&amp;<span style="color: #00538b;">c</span><span style="color: #145c33;">)</span><span style="color: #2f4f4f;"> </span><span style="color: #145c33;">{</span>
+<span style="color: #2f4f4f;">  </span><span style="color: #5317ac;">for</span><span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">(</span><span style="color: #5317ac;">const</span><span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">auto</span>&amp;<span style="color: #2f4f4f;"> </span><span style="color: #00538b;">v</span>:<span style="color: #2f4f4f;"> </span>c.basis<span style="color: #5317ac;">)</span><span style="color: #2f4f4f;"> </span>writeToWavecar<span style="color: #5317ac;">(</span>f,<span style="color: #2f4f4f;"> </span>v<span style="color: #5317ac;">)</span>;
+<span style="color: #145c33;">}</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org126ed2f" class="outline-4">
+<h4 id="org126ed2f"><code>WavecarHeader</code></h4>
+<div class="outline-text-4" id="text-org126ed2f">
+<p>
+In the case of the <code>WavecarHeader</code> we have to make sure the order is the
+correct one that <code>VASP</code> is expecting.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c++"><span style="color: #005a5f;">void</span><span style="color: #2f4f4f;"> </span><span style="color: #721045;">writeToWavecar</span><span style="color: #145c33;">(</span><span style="color: #0000c0;">std</span>::<span style="color: #005a5f;">ofstream</span><span style="color: #2f4f4f;"> </span>&amp;<span style="color: #00538b;">f</span>,<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">const</span><span style="color: #2f4f4f;"> </span><span style="color: #005a5f;">WavecarHeader</span><span style="color: #2f4f4f;"> </span>&amp;<span style="color: #00538b;">h</span><span style="color: #145c33;">)</span><span style="color: #2f4f4f;"> </span><span style="color: #145c33;">{</span>
+<span style="color: #2f4f4f;">  </span><span style="color: #5317ac;">const</span><span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">auto</span><span style="color: #2f4f4f;"> </span>writeInt
+<span style="color: #2f4f4f;">    </span>=<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">[</span>&amp;<span style="color: #00538b;">f</span><span style="color: #5317ac;">](</span><span style="color: #5317ac;">const</span><span style="color: #2f4f4f;"> </span><span style="color: #005a5f;">size_t</span><span style="color: #2f4f4f;"> </span>&amp;<span style="color: #00538b;">i</span><span style="color: #5317ac;">)</span><span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">{</span>
+<span style="color: #2f4f4f;">        </span><span style="color: #5317ac;">const</span><span style="color: #2f4f4f;"> </span><span style="color: #005a5f;">double</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">j</span><span style="color: #005a5f;">(</span>i<span style="color: #005a5f;">)</span>;
+<span style="color: #2f4f4f;">        </span>f.write<span style="color: #005a5f;">(</span><span style="color: #863927;">(</span><span style="color: #005a5f;">char</span>*<span style="color: #863927;">)</span>&amp;j,<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">sizeof</span><span style="color: #863927;">(</span><span style="color: #005a5f;">double</span><span style="color: #863927;">)</span><span style="color: #005a5f;">)</span>;
+<span style="color: #2f4f4f;">    </span><span style="color: #5317ac;">}</span>;
+<span style="color: #2f4f4f;">  </span>writeInt<span style="color: #5317ac;">(</span>h.recordLength<span style="color: #5317ac;">)</span>;
+<span style="color: #2f4f4f;">  </span>writeInt<span style="color: #5317ac;">(</span>h.nSpin<span style="color: #5317ac;">)</span>;
+<span style="color: #2f4f4f;">  </span>writeInt<span style="color: #5317ac;">(</span>h.version<span style="color: #5317ac;">)</span>;
+
+<span style="color: #2f4f4f;">  </span>f.seekp<span style="color: #5317ac;">(</span>h.recordLength<span style="color: #5317ac;">)</span>;
+
+<span style="color: #2f4f4f;">  </span>writeInt<span style="color: #5317ac;">(</span>h.nKpoints<span style="color: #5317ac;">)</span>;
+<span style="color: #2f4f4f;">  </span>writeInt<span style="color: #5317ac;">(</span>h.nBands<span style="color: #5317ac;">)</span>;
+<span style="color: #2f4f4f;">  </span>writeInt<span style="color: #5317ac;">(</span>h.encut<span style="color: #5317ac;">)</span>;
+
+<span style="color: #2f4f4f;">  </span>writeToWavecar<span style="color: #5317ac;">(</span>f,<span style="color: #2f4f4f;"> </span>h.real<span style="color: #5317ac;">)</span>;
+<span style="color: #2f4f4f;">  </span>f.write<span style="color: #5317ac;">(</span><span style="color: #005a5f;">(</span><span style="color: #005a5f;">char</span>*<span style="color: #005a5f;">)</span>&amp;h.eFermi,<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">sizeof</span><span style="color: #005a5f;">(</span><span style="color: #005a5f;">double</span><span style="color: #005a5f;">)</span><span style="color: #5317ac;">)</span>;
+<span style="color: #145c33;">}</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5971b0e" class="outline-4">
+<h4 id="org5971b0e"><code>WaveDescriptor</code></h4>
+<div class="outline-text-4" id="text-org5971b0e">
+<div class="org-src-container">
+<pre class="src src-c++"><span style="color: #005a5f;">void</span><span style="color: #2f4f4f;"> </span><span style="color: #721045;">writeToWavecar</span><span style="color: #145c33;">(</span><span style="color: #0000c0;">std</span>::<span style="color: #005a5f;">ofstream</span><span style="color: #2f4f4f;"> </span>&amp;<span style="color: #00538b;">f</span>,<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">const</span><span style="color: #2f4f4f;"> </span><span style="color: #005a5f;">WaveDescriptor</span><span style="color: #2f4f4f;"> </span>&amp;<span style="color: #00538b;">d</span><span style="color: #145c33;">)</span><span style="color: #2f4f4f;"> </span><span style="color: #145c33;">{</span>
+<span style="color: #2f4f4f;">  </span><span style="color: #5317ac;">for</span><span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">(</span><span style="color: #5317ac;">auto</span><span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">const</span>&amp;<span style="color: #2f4f4f;"> </span><span style="color: #00538b;">kband</span>:<span style="color: #2f4f4f;"> </span>d.bands<span style="color: #5317ac;">)</span><span style="color: #2f4f4f;">  </span><span style="color: #5317ac;">{</span><span style="color: #2f4f4f;"> </span><span style="color: #505050;">//</span><span style="color: #2f4f4f;"> </span><span style="color: #505050;">spin</span><span style="color: #2f4f4f;"> </span><span style="color: #505050;">loop</span>
+<span style="color: #2f4f4f;">    </span><span style="color: #5317ac;">const</span><span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">auto</span>&amp;<span style="color: #2f4f4f;"> </span><span style="color: #00538b;">kVector</span><span style="color: #005a5f;">(</span>kband.first<span style="color: #005a5f;">)</span>;
+<span style="color: #2f4f4f;">    </span><span style="color: #5317ac;">const</span><span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">auto</span>&amp;<span style="color: #2f4f4f;"> </span><span style="color: #00538b;">vband</span><span style="color: #005a5f;">(</span>kband.second<span style="color: #005a5f;">)</span>;
+<span style="color: #2f4f4f;">    </span><span style="color: #5317ac;">const</span><span style="color: #2f4f4f;"> </span><span style="color: #005a5f;">double</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">numberPlaneWaves</span><span style="color: #005a5f;">(</span>vband.coefficients<span style="color: #863927;">[</span>0<span style="color: #863927;">]</span>.size<span style="color: #863927;">()</span><span style="color: #005a5f;">)</span>;
+
+<span style="color: #2f4f4f;">    </span>f.write<span style="color: #005a5f;">(</span><span style="color: #863927;">(</span><span style="color: #005a5f;">char</span>*<span style="color: #863927;">)</span>&amp;numberPlaneWaves,<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">sizeof</span><span style="color: #863927;">(</span><span style="color: #005a5f;">double</span><span style="color: #863927;">)</span><span style="color: #005a5f;">)</span>;
+<span style="color: #2f4f4f;">    </span>writeToWavecar<span style="color: #005a5f;">(</span>f,<span style="color: #2f4f4f;"> </span>kVector<span style="color: #005a5f;">)</span>;
+
+<span style="color: #2f4f4f;">    </span><span style="color: #5317ac;">for</span><span style="color: #2f4f4f;"> </span><span style="color: #005a5f;">(</span><span style="color: #005a5f;">size_t</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">n</span><span style="color: #863927;">(</span>0<span style="color: #863927;">)</span>;<span style="color: #2f4f4f;"> </span>n<span style="color: #2f4f4f;"> </span>&lt;<span style="color: #2f4f4f;"> </span>vband.realEnergies.size<span style="color: #863927;">()</span>;<span style="color: #2f4f4f;"> </span>n++<span style="color: #005a5f;">)</span><span style="color: #2f4f4f;"> </span><span style="color: #005a5f;">{</span>
+<span style="color: #2f4f4f;">      </span>f.write<span style="color: #863927;">(</span><span style="color: #0000c0;">(</span><span style="color: #005a5f;">char</span>*<span style="color: #0000c0;">)</span>&amp;vband.realEnergies<span style="color: #0000c0;">[</span>n<span style="color: #0000c0;">]</span>,<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">sizeof</span><span style="color: #0000c0;">(</span><span style="color: #005a5f;">double</span><span style="color: #0000c0;">)</span><span style="color: #863927;">)</span>;
+<span style="color: #2f4f4f;">      </span>f.write<span style="color: #863927;">(</span><span style="color: #0000c0;">(</span><span style="color: #005a5f;">char</span>*<span style="color: #0000c0;">)</span>&amp;vband.imagEnergies<span style="color: #0000c0;">[</span>n<span style="color: #0000c0;">]</span>,<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">sizeof</span><span style="color: #0000c0;">(</span><span style="color: #005a5f;">double</span><span style="color: #0000c0;">)</span><span style="color: #863927;">)</span>;
+<span style="color: #2f4f4f;">      </span>f.write<span style="color: #863927;">(</span><span style="color: #0000c0;">(</span><span style="color: #005a5f;">char</span>*<span style="color: #0000c0;">)</span>&amp;vband.occupancies<span style="color: #0000c0;">[</span>n<span style="color: #0000c0;">]</span>,<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">sizeof</span><span style="color: #0000c0;">(</span><span style="color: #005a5f;">double</span><span style="color: #0000c0;">)</span><span style="color: #863927;">)</span>;
+<span style="color: #2f4f4f;">    </span><span style="color: #005a5f;">}</span>
+
+<span style="color: #2f4f4f;">    </span><span style="color: #5317ac;">for</span><span style="color: #2f4f4f;"> </span><span style="color: #005a5f;">(</span><span style="color: #005a5f;">size_t</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">n</span><span style="color: #863927;">(</span>0<span style="color: #863927;">)</span>;<span style="color: #2f4f4f;"> </span>n<span style="color: #2f4f4f;"> </span>&lt;<span style="color: #2f4f4f;"> </span>vband.realEnergies.size<span style="color: #863927;">()</span>;<span style="color: #2f4f4f;"> </span>n++<span style="color: #005a5f;">)</span><span style="color: #2f4f4f;"> </span><span style="color: #005a5f;">{</span>
+<span style="color: #2f4f4f;">      </span>f.write<span style="color: #863927;">(</span><span style="color: #0000c0;">(</span><span style="color: #005a5f;">char</span>*<span style="color: #0000c0;">)</span>vband.coefficients<span style="color: #0000c0;">[</span>n<span style="color: #0000c0;">]</span>.data<span style="color: #0000c0;">()</span>,
+<span style="color: #2f4f4f;">              </span>numberPlaneWaves<span style="color: #2f4f4f;"> </span>*<span style="color: #2f4f4f;"> </span>2<span style="color: #2f4f4f;"> </span>*<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">sizeof</span><span style="color: #0000c0;">(</span><span style="color: #005a5f;">double</span><span style="color: #0000c0;">)</span><span style="color: #863927;">)</span>;
+<span style="color: #2f4f4f;">    </span><span style="color: #005a5f;">}</span>
+
+<span style="color: #2f4f4f;">  </span><span style="color: #5317ac;">}</span>
+<span style="color: #145c33;">}</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc913909" class="outline-4">
+<h4 id="orgc913909"><code>Wavecar</code></h4>
+<div class="outline-text-4" id="text-orgc913909">
+<p>
+Writing a <code>WAVECAR</code> consists in writing first the header
+and then the wave descriptor.
+</p>
+<div class="org-src-container">
+<pre class="src src-c++"><span style="color: #005a5f;">void</span><span style="color: #2f4f4f;"> </span><span style="color: #721045;">writeToWavecar</span><span style="color: #145c33;">(</span><span style="color: #0000c0;">std</span>::<span style="color: #005a5f;">ofstream</span><span style="color: #2f4f4f;"> </span>&amp;<span style="color: #00538b;">f</span>,<span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">const</span><span style="color: #2f4f4f;"> </span><span style="color: #005a5f;">Wavecar</span><span style="color: #2f4f4f;"> </span>&amp;<span style="color: #00538b;">w</span><span style="color: #145c33;">)</span><span style="color: #2f4f4f;"> </span><span style="color: #145c33;">{</span>
+<span style="color: #2f4f4f;">  </span>writeToWavecar<span style="color: #5317ac;">(</span>f,<span style="color: #2f4f4f;"> </span>w.header<span style="color: #5317ac;">)</span>;
+
+<span style="color: #2f4f4f;">  </span><span style="color: #5317ac;">for</span><span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">(</span><span style="color: #005a5f;">size_t</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">ispin</span><span style="color: #005a5f;">(</span>0<span style="color: #005a5f;">)</span>;<span style="color: #2f4f4f;"> </span>ispin<span style="color: #2f4f4f;"> </span>&lt;<span style="color: #2f4f4f;"> </span>w.descriptors.size<span style="color: #005a5f;">()</span>;<span style="color: #2f4f4f;"> </span>ispin++<span style="color: #5317ac;">)</span><span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">{</span>
+<span style="color: #2f4f4f;">    </span>f.seekp<span style="color: #005a5f;">(</span><span style="color: #863927;">(</span>ispin<span style="color: #2f4f4f;"> </span>+<span style="color: #2f4f4f;"> </span>2<span style="color: #863927;">)</span><span style="color: #2f4f4f;"> </span>*<span style="color: #2f4f4f;"> </span>w.header.recordLength<span style="color: #005a5f;">)</span>;
+<span style="color: #2f4f4f;">    </span>writeToWavecar<span style="color: #005a5f;">(</span>f,<span style="color: #2f4f4f;"> </span>w.descriptors<span style="color: #863927;">[</span>ispin<span style="color: #863927;">]</span><span style="color: #005a5f;">)</span>;
+<span style="color: #2f4f4f;">  </span><span style="color: #5317ac;">}</span>
+
+<span style="color: #145c33;">}</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org483a423" class="outline-2">
+<h2 id="org483a423">Tests</h2>
+<div class="outline-text-2" id="text-org483a423">
+</div>
+<div id="outline-container-orgc8312dd" class="outline-3">
+<h3 id="orgc8312dd">Main function</h3>
+<div class="outline-text-3" id="text-orgc8312dd">
+<div class="org-src-container">
+<pre class="src src-c++"><span style="color: #a0132f;">#include</span><span style="color: #2f4f4f;"> </span><span style="color: #145c33;">&lt;</span><span style="color: #2544bb;">Wavecar.hpp</span><span style="color: #145c33;">&gt;</span>
+
+<span style="color: #005a5f;">int</span><span style="color: #2f4f4f;"> </span><span style="color: #721045;">main</span><span style="color: #2f4f4f;"> </span><span style="color: #145c33;">(</span><span style="color: #005a5f;">int</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">argc</span>,<span style="color: #2f4f4f;"> </span><span style="color: #005a5f;">char</span><span style="color: #2f4f4f;"> </span>**<span style="color: #00538b;">argv</span><span style="color: #145c33;">)</span><span style="color: #2f4f4f;"> </span><span style="color: #145c33;">{</span>
 <span style="color: #2f4f4f;">  </span><span style="color: #5317ac;">auto</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">wavecar</span><span style="color: #5317ac;">(</span>readWavecar<span style="color: #005a5f;">(</span><span style="color: #2544bb;">"WAVECAR"</span><span style="color: #005a5f;">)</span><span style="color: #5317ac;">)</span>;
 <span style="color: #2f4f4f;">  </span><span style="color: #5317ac;">auto</span>&amp;<span style="color: #2f4f4f;"> </span><span style="color: #00538b;">header</span><span style="color: #5317ac;">(</span>wavecar.header<span style="color: #5317ac;">)</span>;
 
@@ -707,6 +832,10 @@ channel and first \( k \)-point
 <span style="color: #2f4f4f;">  </span><span style="color: #0000c0;">std</span>::cout<span style="color: #2f4f4f;"> </span>&lt;&lt;<span style="color: #2f4f4f;"> </span><span style="color: #2544bb;">"Reciprocal</span><span style="color: #2f4f4f;"> </span><span style="color: #2544bb;">vectors:</span><span style="color: #2f4f4f;"> </span><span style="color: #2544bb;">\n"</span>;
 <span style="color: #2f4f4f;">  </span><span style="color: #5317ac;">for</span><span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">(</span><span style="color: #5317ac;">const</span><span style="color: #2f4f4f;"> </span><span style="color: #5317ac;">auto</span><span style="color: #2f4f4f;"> </span>&amp;<span style="color: #00538b;">b</span>:<span style="color: #2f4f4f;"> </span>header.reciprocal.basis<span style="color: #5317ac;">)</span>
 <span style="color: #2f4f4f;">    </span>printf<span style="color: #5317ac;">(</span><span style="color: #2544bb;">"-</span><span style="color: #2f4f4f;"> </span><span style="color: #2544bb;">%f</span><span style="color: #2f4f4f;"> </span><span style="color: #2544bb;">%f</span><span style="color: #2f4f4f;"> </span><span style="color: #2544bb;">%f\n"</span>,<span style="color: #2f4f4f;"> </span>b<span style="color: #005a5f;">[</span>0<span style="color: #005a5f;">]</span>,<span style="color: #2f4f4f;"> </span>b<span style="color: #005a5f;">[</span>1<span style="color: #005a5f;">]</span>,<span style="color: #2f4f4f;"> </span>b<span style="color: #005a5f;">[</span>2<span style="color: #005a5f;">]</span><span style="color: #5317ac;">)</span>;
+
+<span style="color: #2f4f4f;">  </span><span style="color: #5317ac;">auto</span><span style="color: #2f4f4f;"> </span><span style="color: #00538b;">wavecar2</span><span style="color: #5317ac;">(</span><span style="color: #0000c0;">std</span>::ofstream<span style="color: #005a5f;">(</span><span style="color: #2544bb;">"WAVECAR-2"</span>,<span style="color: #2f4f4f;"> </span><span style="color: #0000c0;">std</span>::<span style="color: #0000c0;">ios</span>::binary<span style="color: #005a5f;">)</span><span style="color: #5317ac;">)</span>;
+<span style="color: #2f4f4f;">  </span><span style="color: #0000c0;">std</span>::cout<span style="color: #2f4f4f;"> </span>&lt;&lt;<span style="color: #2f4f4f;"> </span><span style="color: #2544bb;">"Writing</span><span style="color: #2f4f4f;"> </span><span style="color: #2544bb;">WAVECAR-2"</span><span style="color: #2f4f4f;"> </span>&lt;&lt;<span style="color: #2f4f4f;"> </span><span style="color: #0000c0;">std</span>::endl;
+<span style="color: #2f4f4f;">  </span>writeToWavecar<span style="color: #5317ac;">(</span>wavecar2,<span style="color: #2f4f4f;"> </span>wavecar<span style="color: #5317ac;">)</span>;
 
 <span style="color: #145c33;">}</span>
 </pre>
@@ -729,8 +858,8 @@ channel and first \( k \)-point
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Alejandro Gallo</p>
-<p class="date">Created: 2021-02-27 Sat 00:12</p>
-<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+<p class="date">Created: 2021-03-03 Wed 18:18</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
 </html>
