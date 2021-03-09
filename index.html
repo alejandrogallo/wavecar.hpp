@@ -1,0 +1,1023 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2021-03-09 Tue 12:16 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Wavecar.hpp</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Alejandro Gallo" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2019 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Wavecar.hpp</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgcddd4ed">Wavecar.hpp</a>
+<ul>
+<li><a href="#orge5cdc3a">Introduction</a></li>
+<li><a href="#org5fd9f9f">Header</a></li>
+<li><a href="#org529ad10">Main types</a></li>
+<li><a href="#org32f224f"><code>WAVECAR</code> parsing</a>
+<ul>
+<li><a href="#orgd34262c">Understanding the code</a></li>
+<li><a href="#org81d6adf">Wave descriptor</a></li>
+<li><a href="#orgb70f755">Header</a></li>
+<li><a href="#org439747d">The whole <code>WAVECAR</code></a></li>
+</ul>
+</li>
+<li><a href="#org789543f"><code>WAVECAR</code> writing</a>
+<ul>
+<li><a href="#orgbfb6291"><code>CellVector</code></a></li>
+<li><a href="#orgb9a8084"><code>Cell</code></a></li>
+<li><a href="#org05ca6fa"><code>WavecarHeader</code></a></li>
+<li><a href="#org9726675"><code>WaveDescriptor</code></a></li>
+<li><a href="#org19008e5"><code>Wavecar</code></a></li>
+</ul>
+</li>
+<li><a href="#org16eabbd">G grid</a>
+<ul>
+<li><a href="#org4f81d09">Types</a></li>
+<li><a href="#org2ad156e">Creating a grid from a wavecar</a></li>
+</ul>
+</li>
+<li><a href="#orgd0a7cd5">Mathematical functions</a>
+<ul>
+<li><a href="#org991ff01">Products</a></li>
+<li><a href="#org4548a56">Cell volume</a></li>
+<li><a href="#org5e4ba69">Reciprocal cell</a></li>
+</ul>
+</li>
+<li><a href="#orgfcd79af">Putting all together</a></li>
+</ul>
+</li>
+<li><a href="#orgcbf0f55">Tests</a>
+<ul>
+<li><a href="#org46892a0">The script <code>wavecar-show</code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgcddd4ed" class="outline-2">
+<h2 id="orgcddd4ed">Wavecar.hpp</h2>
+<div class="outline-text-2" id="text-orgcddd4ed">
+</div>
+<div id="outline-container-orge5cdc3a" class="outline-3">
+<h3 id="orge5cdc3a">Introduction</h3>
+<div class="outline-text-3" id="text-orge5cdc3a">
+<p>
+This package implements a C++11 header-only library
+for reading <code>WAVECAR</code> files in the <code>VASP5</code> format.
+</p>
+
+<p>
+It is written as a literate program cite:LiteratePrograKnuth1984,
+so we will try to keep the documentation and the code in the same place.
+</p>
+
+<p>
+As a convenience you can find the header file in the <code>include</code> directory.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org5fd9f9f" class="outline-3">
+<h3 id="org5fd9f9f">Header</h3>
+<div class="outline-text-3" id="text-org5fd9f9f">
+<p>
+We will only need libraries available in the standard library:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c++"><span style="color: #e44649;">#include</span> <span style="color: #50a14f;">&lt;iostream&gt;</span>
+<span style="color: #e44649;">#include</span> <span style="color: #50a14f;">&lt;fstream&gt;</span>
+<span style="color: #e44649;">#include</span> <span style="color: #50a14f;">&lt;map&gt;</span>
+<span style="color: #e44649;">#include</span> <span style="color: #50a14f;">&lt;array&gt;</span>
+<span style="color: #e44649;">#include</span> <span style="color: #50a14f;">&lt;assert.h&gt;</span>
+<span style="color: #e44649;">#include</span> <span style="color: #50a14f;">&lt;string&gt;</span>
+<span style="color: #e44649;">#include</span> <span style="color: #50a14f;">&lt;numeric&gt;</span>
+<span style="color: #e44649;">#include</span> <span style="color: #50a14f;">&lt;algorithm&gt;</span>
+<span style="color: #e44649;">#include</span> <span style="color: #50a14f;">&lt;vector&gt;</span>
+<span style="color: #e44649;">#include</span> <span style="color: #50a14f;">&lt;math.h&gt;</span>
+<span style="color: #e44649;">#include</span> <span style="color: #50a14f;">&lt;complex&gt;</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org529ad10" class="outline-3">
+<h3 id="org529ad10">Main types</h3>
+<div class="outline-text-3" id="text-org529ad10">
+<p>
+We define the main structure for the WAVECAR header,
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c++"><span style="color: #a626a4;">using</span> <span style="color: #c18401;">CellVector</span> = <span style="font-weight: bold; text-decoration: underline;">std</span>::<span style="color: #c18401;">array</span>&lt;<span style="color: #c18401;">double</span>, 3&gt;;
+
+<span style="color: #a626a4;">struct</span> <span style="color: #c18401;">Cell</span> {
+  <span style="font-weight: bold; text-decoration: underline;">std</span>::<span style="color: #c18401;">array</span>&lt;<span style="color: #c18401;">CellVector</span>, 3&gt; <span style="color: #8b4513;">basis</span>;
+  <span style="color: #c18401;">double</span> <span style="color: #8b4513;">volume</span>;
+};
+
+<span style="color: #a626a4;">struct</span> <span style="color: #c18401;">WavecarHeader</span> {
+  <span style="color: #c18401;">size_t</span> <span style="color: #8b4513;">recordLength</span>;
+  <span style="color: #c18401;">size_t</span> <span style="color: #8b4513;">nSpin</span>;
+  <span style="color: #c18401;">size_t</span> <span style="color: #8b4513;">version</span>;
+  <span style="color: #c18401;">size_t</span> <span style="color: #8b4513;">nKpoints</span>;
+  <span style="color: #c18401;">size_t</span> <span style="color: #8b4513;">nBands</span>;
+  <span style="color: #c18401;">size_t</span> <span style="color: #8b4513;">encut</span>;
+  <span style="color: #c18401;">double</span> <span style="color: #8b4513;">eFermi</span>;
+  <span style="color: #c18401;">size_t</span> <span style="color: #8b4513;">nPlaneWaves</span>;
+  <span style="color: #c18401;">Cell</span> <span style="color: #8b4513;">real</span>, <span style="color: #8b4513;">reciprocal</span>;
+};
+
+<span style="color: #a626a4;">using</span> <span style="color: #c18401;">KPoint</span> = CellVector;
+<span style="color: #a626a4;">using</span> <span style="color: #c18401;">OrbitalCoefficients</span> = <span style="font-weight: bold; text-decoration: underline;">std</span>::<span style="color: #c18401;">vector</span>&lt;<span style="font-weight: bold; text-decoration: underline;">std</span>::<span style="color: #c18401;">complex</span>&lt;<span style="color: #c18401;">double</span>&gt;&gt;;
+<span style="color: #a626a4;">struct</span> <span style="color: #c18401;">HorizontalBand</span> {
+  <span style="font-weight: bold; text-decoration: underline;">std</span>::<span style="color: #c18401;">vector</span>&lt;<span style="color: #c18401;">double</span>&gt; <span style="color: #8b4513;">realEnergies</span>;
+  <span style="font-weight: bold; text-decoration: underline;">std</span>::<span style="color: #c18401;">vector</span>&lt;<span style="color: #c18401;">double</span>&gt; <span style="color: #8b4513;">imagEnergies</span>;
+  <span style="font-weight: bold; text-decoration: underline;">std</span>::<span style="color: #c18401;">vector</span>&lt;<span style="color: #c18401;">double</span>&gt; <span style="color: #8b4513;">occupancies</span>;
+  <span style="font-weight: bold; text-decoration: underline;">std</span>::<span style="color: #c18401;">vector</span>&lt;<span style="color: #c18401;">OrbitalCoefficients</span>&gt; <span style="color: #8b4513;">coefficients</span>;
+};
+<span style="color: #a626a4;">using</span> <span style="color: #c18401;">KBand</span> = <span style="font-weight: bold; text-decoration: underline;">std</span>::<span style="color: #c18401;">pair</span>&lt;<span style="color: #c18401;">KPoint</span>, <span style="color: #c18401;">HorizontalBand</span>&gt;;
+
+<span style="color: #a626a4;">struct</span> <span style="color: #c18401;">WaveDescriptor</span> {
+  <span style="font-weight: bold; text-decoration: underline;">std</span>::<span style="color: #c18401;">vector</span>&lt;<span style="color: #c18401;">KBand</span>&gt; <span style="color: #8b4513;">bands</span>;
+  <span style="color: #a626a4;">inline</span> <span style="color: #c18401;">size_t</span> <span style="color: #0184bc;">nKpoints</span>() { <span style="color: #a626a4;">return</span> bands.size(); }
+};
+
+<span style="color: #a626a4;">struct</span> <span style="color: #c18401;">Wavecar</span> {
+  <span style="color: #c18401;">WavecarHeader</span> <span style="color: #8b4513;">header</span>;
+  <span style="font-weight: bold; text-decoration: underline;">std</span>::<span style="color: #c18401;">vector</span>&lt;<span style="color: #c18401;">WaveDescriptor</span>&gt; <span style="color: #8b4513;">descriptors</span>;
+};
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org32f224f" class="outline-3">
+<h3 id="org32f224f"><code>WAVECAR</code> parsing</h3>
+<div class="outline-text-3" id="text-org32f224f">
+</div>
+
+<div id="outline-container-orgd34262c" class="outline-4">
+<h4 id="orgd34262c">Understanding the code</h4>
+<div class="outline-text-4" id="text-orgd34262c">
+<p>
+It can be quite challenging sometimes to understand binary formats
+coming from Fortran, or binary formats in general. It is quite instructive
+to peek into the binary structure of the files and try to
+backwards engineer the main structure of the file.
+</p>
+
+<p>
+Here is an excerpt of a hexdump of a typical <code>VASP5</code> format <code>WAVECAR</code> file:
+</p>
+
+<div class="figure">
+<pre class="example">
+                  BYTES      
+ ADDRESS  1 2  3 4  4 6  7 8  | Comments
+==============================|=========
+00000000: 0000 0000 0018 d940 | Fortran record length
+00000008: 0000 0000 0000 f03f | number of spin channels
+00000010: 0000 0000 8006 ea40 | format version (RTAG)
+00000018: 0000 0000 0000 0000 |
+*                               (zero padding)
+00006460: 0000 0000 0000 f03f | Number of k-points
+00006468: 0000 0000 0020 b940 | Number of bands
+00006470: 0000 0000 00e0 8540 | ENCUT
+00006478: ba49 0c02 2b07 1140 | a[1,1] (lattice vectors)
+00006480: ba49 0c02 2b07 1140 | a[1,2]
+00006488: 0000 0000 0000 0000 | a[1,3]
+00006490: 0000 0000 0000 0000 | a[2,1]
+00006498: ba49 0c02 2b07 1140 | a[2,2]
+000064a0: ba49 0c02 2b07 1140 | a[2,3]
+000064a8: ba49 0c02 2b07 1140 | a[3,1]
+000064b0: 0000 0000 0000 0000 | a[3,2]
+000064b8: ba49 0c02 2b07 1140 | a[3,3]
+000064c0: 1a6f 1d53 35e9 0540 | fermi energy
+000064c8: 0000 0000 0000 0000 |
+*                               (zero padding)
+0000c8c0: 0000 0000 0018 a940 | number of plane waves
+0000c8c8: 0000 0000 0000 0000 | kpoint[0]  \
+0000c8d0: 0000 0000 0000 0000 | kpoint[1]   &gt; Gamma point
+0000c8d8: 0000 0000 0000 0000 | kpoint[2]  /
+0000c8e0: f1e1 932b 1cee 56c0 | energy-real     x
+0000c8e8: 0000 0000 0000 0000 | energy-complex  0
+0000c8f0: 0000 0000 0000 f03f | occupation      1
+</pre>
+
+</div>
+
+<p>
+Here there are a couple of things we should remark,
+</p>
+<ul class="org-ul">
+<li><code>VASP5</code> format writes out everything using floating point numbers,
+even quantities that ought to be integers, this is done so that the
+binary format is compatible throughout machines (and most programming
+languages) since they follow IEEE standards.</li>
+<li>Fortran can use an offset to read different parts of a file
+separated in records. The first quantity we get in the <code>WAVECAR</code>
+is this record length. In this particular case it is equal
+to <code>25696</code> or <code>0x6460</code> in hexadecimal notation.
+Notice that this is equal the address where the <code>WAVECAR</code>
+header begins by providing the number of \( k \)-points.</li>
+<li>The second time this record length arises, is when
+the first chunk of data for the wavefunction arises, i.e.
+<code>2*25696 = 0xc8c0</code>, where we obtain for the first spin
+channel and first \( k \)-point
+<ul class="org-ul">
+<li>the number of plane-waves</li>
+<li>the real part of the eigenenergies</li>
+<li>the complex part of the eigenenergies</li>
+<li>the occupation numbers</li>
+<li>the plane-wave coefficients.</li>
+</ul></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org81d6adf" class="outline-4">
+<h4 id="org81d6adf">Wave descriptor</h4>
+<div class="outline-text-4" id="text-org81d6adf">
+<div class="org-src-container">
+<pre class="src src-c++"><span style="color: #c18401;">KBand</span>
+<span style="color: #0184bc;">readWaveWaveDescriptor</span>( <span style="color: #a626a4;">const</span> <span style="font-weight: bold; text-decoration: underline;">std</span>::<span style="color: #c18401;">string</span> &amp;<span style="color: #8b4513;">fileName</span>
+                      , <span style="color: #a626a4;">const</span> <span style="color: #c18401;">WavecarHeader</span> &amp;<span style="color: #8b4513;">header</span>
+                      , <span style="color: #a626a4;">const</span> <span style="color: #c18401;">size_t</span> &amp;<span style="color: #8b4513;">spinIndex</span>
+                      ) {
+
+  <span style="font-weight: bold; text-decoration: underline;">std</span>::<span style="color: #c18401;">vector</span>&lt;<span style="color: #c18401;">double</span>&gt; <span style="color: #8b4513;">realEnergies</span>(header.nBands)
+    , <span style="color: #8b4513;">imagEnergies</span>(header.nBands)
+    , <span style="color: #8b4513;">occupancies</span>(header.nBands)
+    ;
+
+  <span style="color: #c18401;">double</span> <span style="color: #8b4513;">buffer</span>;
+  <span style="font-weight: bold; text-decoration: underline;">std</span>::<span style="color: #c18401;">fstream</span> <span style="color: #8b4513;">file</span>(fileName, <span style="font-weight: bold; text-decoration: underline;">std</span>::<span style="font-weight: bold; text-decoration: underline;">ios</span>::binary | <span style="font-weight: bold; text-decoration: underline;">std</span>::<span style="font-weight: bold; text-decoration: underline;">ios</span>::in);
+  <span style="color: #c18401;">size_t</span> <span style="color: #8b4513;">numberPlaneWaves</span>;
+  <span style="color: #c18401;">CellVector</span> <span style="color: #8b4513;">kpoint</span>;
+  <span style="font-weight: bold; text-decoration: underline;">std</span>::<span style="color: #c18401;">vector</span>&lt;OrbitalCoefficients&gt; <span style="color: #8b4513;">coefficients</span>;
+
+  file.seekg((spinIndex + 2) * header.recordLength);
+
+  <span style="color: #a0a1a7; font-weight: bold;">// </span><span style="color: #a0a1a7;">read numberPlaneWaves</span>
+  file.read((<span style="color: #c18401;">char</span>*)&amp;buffer, <span style="color: #a626a4;">sizeof</span>(<span style="color: #c18401;">double</span>));
+  numberPlaneWaves = size_t(buffer);
+
+  <span style="color: #a0a1a7; font-weight: bold;">//</span><span style="color: #a0a1a7;">C.resize(header.nBands * numberPlaneWaves);</span>
+
+  file.read((<span style="color: #c18401;">char</span>*)&amp;kpoint, 3*<span style="color: #a626a4;">sizeof</span>(<span style="color: #c18401;">double</span>));
+
+  <span style="color: #a626a4;">for</span> (<span style="color: #c18401;">size_t</span> <span style="color: #8b4513;">n</span>=0; n &lt; header.nBands; n++) {
+    file.read((<span style="color: #c18401;">char</span>*)(realEnergies.data() + n), <span style="color: #a626a4;">sizeof</span>(<span style="color: #c18401;">double</span>));
+    file.read((<span style="color: #c18401;">char</span>*)(imagEnergies.data() + n), <span style="color: #a626a4;">sizeof</span>(<span style="color: #c18401;">double</span>));
+    file.read((<span style="color: #c18401;">char</span>*)(occupancies.data() + n), <span style="color: #a626a4;">sizeof</span>(<span style="color: #c18401;">double</span>));
+  }
+
+  <span style="color: #a626a4;">for</span> (<span style="color: #c18401;">size_t</span> <span style="color: #8b4513;">n</span>=0; n &lt; header.nBands; n++) {
+    <span style="color: #c18401;">OrbitalCoefficients</span> <span style="color: #8b4513;">C</span>;
+    C.resize(numberPlaneWaves);
+    coefficients.push_back(C);
+    file.read((<span style="color: #c18401;">char</span>*)C.data(), numberPlaneWaves * 2 * <span style="color: #a626a4;">sizeof</span>(<span style="color: #c18401;">double</span>));
+  }
+
+  <span style="color: #a626a4;">return</span> { kpoint
+         , {realEnergies, imagEnergies, occupancies, coefficients}
+         };
+
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb70f755" class="outline-4">
+<h4 id="orgb70f755">Header</h4>
+<div class="outline-text-4" id="text-orgb70f755">
+<div class="org-src-container">
+<pre class="src src-c++"><span style="color: #c18401;">WavecarHeader</span> <span style="color: #0184bc;">readWavecarHeader</span>(<span style="color: #a626a4;">const</span> <span style="font-weight: bold; text-decoration: underline;">std</span>::<span style="color: #c18401;">string</span> &amp;<span style="color: #8b4513;">fileName</span>) {
+  <span style="color: #c18401;">WavecarHeader</span> <span style="color: #8b4513;">header</span>;
+  <span style="font-weight: bold; text-decoration: underline;">std</span>::<span style="color: #c18401;">fstream</span> <span style="color: #8b4513;">file</span>(fileName, <span style="font-weight: bold; text-decoration: underline;">std</span>::<span style="font-weight: bold; text-decoration: underline;">ios</span>::binary | <span style="font-weight: bold; text-decoration: underline;">std</span>::<span style="font-weight: bold; text-decoration: underline;">ios</span>::in);
+  <span style="color: #c18401;">double</span> <span style="color: #8b4513;">buffer</span>;
+  <span style="font-weight: bold; text-decoration: underline;">std</span>::<span style="color: #c18401;">vector</span>&lt;<span style="color: #c18401;">double</span>&gt; <span style="color: #8b4513;">vvbuffer</span>;
+
+  assert(<span style="color: #a626a4;">sizeof</span>(<span style="color: #c18401;">double</span>) == 8);
+  assert(<span style="color: #a626a4;">sizeof</span>(header.real.basis) == 72);
+  assert(<span style="color: #a626a4;">sizeof</span>(CellVector) == 3 * <span style="color: #a626a4;">sizeof</span>(<span style="color: #c18401;">double</span>));
+
+  file.read((<span style="color: #c18401;">char</span>*)&amp;buffer, <span style="color: #a626a4;">sizeof</span>(<span style="color: #c18401;">double</span>));
+  header.recordLength = size_t(buffer);
+  file.read((<span style="color: #c18401;">char</span>*)&amp;buffer, <span style="color: #a626a4;">sizeof</span>(<span style="color: #c18401;">double</span>));
+  header.nSpin = size_t(buffer);
+  file.read((<span style="color: #c18401;">char</span>*)&amp;buffer, <span style="color: #a626a4;">sizeof</span>(<span style="color: #c18401;">double</span>));
+  header.version = size_t(buffer);
+
+  <span style="color: #a626a4;">if</span> (header.version != 53300)
+    <span style="color: #a626a4;">throw</span> <span style="color: #50a14f;">"This program only supports VASP5 format (RTAG: 53300)"</span>;
+
+  file.seekg(header.recordLength);
+
+  file.read((<span style="color: #c18401;">char</span>*)&amp;buffer, <span style="color: #a626a4;">sizeof</span>(<span style="color: #c18401;">double</span>));
+  header.nKpoints = size_t(buffer);
+  file.read((<span style="color: #c18401;">char</span>*)&amp;buffer, <span style="color: #a626a4;">sizeof</span>(<span style="color: #c18401;">double</span>));
+  header.nBands = size_t(buffer);
+  file.read((<span style="color: #c18401;">char</span>*)&amp;buffer, <span style="color: #a626a4;">sizeof</span>(<span style="color: #c18401;">double</span>));
+  header.encut = size_t(buffer);
+
+  <span style="color: #a0a1a7; font-weight: bold;">// </span><span style="color: #a0a1a7;">Setup real cell</span>
+  file.read((<span style="color: #c18401;">char</span>*)&amp;header.real.basis, <span style="color: #a626a4;">sizeof</span>(header.real.basis));
+  header.real.volume = cellVolume(header.real);
+
+  file.read((<span style="color: #c18401;">char</span>*)&amp;buffer, <span style="color: #a626a4;">sizeof</span>(<span style="color: #c18401;">double</span>));
+  header.eFermi = buffer;
+
+  <span style="color: #a0a1a7; font-weight: bold;">// </span><span style="color: #a0a1a7;">Setup Reciprocal cell</span>
+  header.reciprocal = reciprocalCell(header.real);
+
+
+
+  <span style="color: #a626a4;">return</span> header;
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org439747d" class="outline-4">
+<h4 id="org439747d">The whole <code>WAVECAR</code></h4>
+<div class="outline-text-4" id="text-org439747d">
+<div class="org-src-container">
+<pre class="src src-c++"><span style="color: #c18401;">Wavecar</span> <span style="color: #0184bc;">readWavecar</span>(<span style="color: #a626a4;">const</span> <span style="font-weight: bold; text-decoration: underline;">std</span>::<span style="color: #c18401;">string</span> &amp;<span style="color: #8b4513;">fileName</span>) {
+  <span style="color: #a626a4;">auto</span> <span style="color: #8b4513;">header</span>(readWavecarHeader(fileName));
+  <span style="font-weight: bold; text-decoration: underline;">std</span>::<span style="color: #c18401;">vector</span>&lt;WaveDescriptor&gt; <span style="color: #8b4513;">descriptors</span>;
+
+  <span style="color: #a626a4;">for</span> (<span style="color: #c18401;">size_t</span> <span style="color: #8b4513;">i</span>=0; i &lt; header.nSpin; i++) {
+    <span style="color: #c18401;">WaveDescriptor</span> <span style="color: #8b4513;">descriptor</span>;
+    <span style="color: #a626a4;">for</span> (<span style="color: #c18401;">size_t</span> <span style="color: #8b4513;">k</span>=0; k &lt; header.nKpoints; k++) {
+      <span style="color: #a626a4;">auto</span> <span style="color: #8b4513;">kBand</span>(readWaveWaveDescriptor(fileName, header, i));
+      descriptor.bands.push_back(kBand);
+    }
+    descriptors.push_back(descriptor);
+  }
+  <span style="color: #a626a4;">return</span> {header, descriptors};
+
+}
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org789543f" class="outline-3">
+<h3 id="org789543f"><code>WAVECAR</code> writing</h3>
+<div class="outline-text-3" id="text-org789543f">
+<p>
+Our writer writes <code>WAVECAR</code> files in the <code>VASP5</code> version.
+</p>
+</div>
+
+<div id="outline-container-orgbfb6291" class="outline-4">
+<h4 id="orgbfb6291"><code>CellVector</code></h4>
+<div class="outline-text-4" id="text-orgbfb6291">
+<div class="org-src-container">
+<pre class="src src-c++"><span style="color: #c18401;">void</span> <span style="color: #0184bc;">writeToWavecar</span>(<span style="font-weight: bold; text-decoration: underline;">std</span>::<span style="color: #c18401;">ofstream</span> &amp;<span style="color: #8b4513;">f</span>, <span style="color: #a626a4;">const</span> <span style="color: #c18401;">CellVector</span> &amp;<span style="color: #8b4513;">v</span>) {
+  f.write((<span style="color: #c18401;">char</span>*)v.data(), <span style="color: #a626a4;">sizeof</span>(CellVector));
+}
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orgb9a8084" class="outline-4">
+<h4 id="orgb9a8084"><code>Cell</code></h4>
+<div class="outline-text-4" id="text-orgb9a8084">
+<p>
+In the case of a cell we only write the basis elements in order,
+</p>
+<div class="org-src-container">
+<pre class="src src-c++"><span style="color: #c18401;">void</span> <span style="color: #0184bc;">writeToWavecar</span>(<span style="font-weight: bold; text-decoration: underline;">std</span>::<span style="color: #c18401;">ofstream</span> &amp;<span style="color: #8b4513;">f</span>, <span style="color: #a626a4;">const</span> <span style="color: #c18401;">Cell</span> &amp;<span style="color: #8b4513;">c</span>) {
+  <span style="color: #a626a4;">for</span> (<span style="color: #a626a4;">const</span> <span style="color: #a626a4;">auto</span>&amp; <span style="color: #8b4513;">v</span>: c.basis) writeToWavecar(f, v);
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org05ca6fa" class="outline-4">
+<h4 id="org05ca6fa"><code>WavecarHeader</code></h4>
+<div class="outline-text-4" id="text-org05ca6fa">
+<p>
+In the case of the <code>WavecarHeader</code> we have to make sure the order is the
+correct one that <code>VASP</code> is expecting.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c++"><span style="color: #c18401;">void</span> <span style="color: #0184bc;">writeToWavecar</span>(<span style="font-weight: bold; text-decoration: underline;">std</span>::<span style="color: #c18401;">ofstream</span> &amp;<span style="color: #8b4513;">f</span>, <span style="color: #a626a4;">const</span> <span style="color: #c18401;">WavecarHeader</span> &amp;<span style="color: #8b4513;">h</span>) {
+  <span style="color: #a626a4;">const</span> <span style="color: #a626a4;">auto</span> writeInt
+    = [&amp;<span style="color: #8b4513;">f</span>](<span style="color: #a626a4;">const</span> <span style="color: #c18401;">size_t</span> &amp;<span style="color: #8b4513;">i</span>) {
+        <span style="color: #a626a4;">const</span> <span style="color: #c18401;">double</span> <span style="color: #8b4513;">j</span>(i);
+        f.write((<span style="color: #c18401;">char</span>*)&amp;j, <span style="color: #a626a4;">sizeof</span>(<span style="color: #c18401;">double</span>));
+    };
+  writeInt(h.recordLength);
+  writeInt(h.nSpin);
+  writeInt(h.version);
+
+  f.seekp(h.recordLength);
+
+  writeInt(h.nKpoints);
+  writeInt(h.nBands);
+  writeInt(h.encut);
+
+  writeToWavecar(f, h.real);
+  f.write((<span style="color: #c18401;">char</span>*)&amp;h.eFermi, <span style="color: #a626a4;">sizeof</span>(<span style="color: #c18401;">double</span>));
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org9726675" class="outline-4">
+<h4 id="org9726675"><code>WaveDescriptor</code></h4>
+<div class="outline-text-4" id="text-org9726675">
+<div class="org-src-container">
+<pre class="src src-c++"><span style="color: #c18401;">void</span> <span style="color: #0184bc;">writeToWavecar</span>(<span style="font-weight: bold; text-decoration: underline;">std</span>::<span style="color: #c18401;">ofstream</span> &amp;<span style="color: #8b4513;">f</span>, <span style="color: #a626a4;">const</span> <span style="color: #c18401;">WaveDescriptor</span> &amp;<span style="color: #8b4513;">d</span>) {
+  <span style="color: #a626a4;">for</span> (<span style="color: #a626a4;">auto</span> <span style="color: #a626a4;">const</span>&amp; <span style="color: #8b4513;">kband</span>: d.bands)  { <span style="color: #a0a1a7; font-weight: bold;">// </span><span style="color: #a0a1a7;">spin loop</span>
+    <span style="color: #a626a4;">const</span> <span style="color: #a626a4;">auto</span>&amp; <span style="color: #8b4513;">kVector</span>(kband.first);
+    <span style="color: #a626a4;">const</span> <span style="color: #a626a4;">auto</span>&amp; <span style="color: #8b4513;">vband</span>(kband.second);
+    <span style="color: #a626a4;">const</span> <span style="color: #c18401;">double</span> <span style="color: #8b4513;">numberPlaneWaves</span>(vband.coefficients[0].size());
+
+    f.write((<span style="color: #c18401;">char</span>*)&amp;numberPlaneWaves, <span style="color: #a626a4;">sizeof</span>(<span style="color: #c18401;">double</span>));
+    writeToWavecar(f, kVector);
+
+    <span style="color: #a626a4;">for</span> (<span style="color: #c18401;">size_t</span> <span style="color: #8b4513;">n</span>(0); n &lt; vband.realEnergies.size(); n++) {
+      f.write((<span style="color: #c18401;">char</span>*)&amp;vband.realEnergies[n], <span style="color: #a626a4;">sizeof</span>(<span style="color: #c18401;">double</span>));
+      f.write((<span style="color: #c18401;">char</span>*)&amp;vband.imagEnergies[n], <span style="color: #a626a4;">sizeof</span>(<span style="color: #c18401;">double</span>));
+      f.write((<span style="color: #c18401;">char</span>*)&amp;vband.occupancies[n], <span style="color: #a626a4;">sizeof</span>(<span style="color: #c18401;">double</span>));
+    }
+
+    <span style="color: #a626a4;">for</span> (<span style="color: #c18401;">size_t</span> <span style="color: #8b4513;">n</span>(0); n &lt; vband.realEnergies.size(); n++) {
+      f.write((<span style="color: #c18401;">char</span>*)vband.coefficients[n].data(),
+              numberPlaneWaves * 2 * <span style="color: #a626a4;">sizeof</span>(<span style="color: #c18401;">double</span>));
+    }
+
+  }
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org19008e5" class="outline-4">
+<h4 id="org19008e5"><code>Wavecar</code></h4>
+<div class="outline-text-4" id="text-org19008e5">
+<p>
+Writing a <code>WAVECAR</code> consists in writing first the header
+and then the wave descriptor.
+</p>
+<div class="org-src-container">
+<pre class="src src-c++"><span style="color: #c18401;">void</span> <span style="color: #0184bc;">writeToWavecar</span>(<span style="font-weight: bold; text-decoration: underline;">std</span>::<span style="color: #c18401;">ofstream</span> &amp;<span style="color: #8b4513;">f</span>, <span style="color: #a626a4;">const</span> <span style="color: #c18401;">Wavecar</span> &amp;<span style="color: #8b4513;">w</span>) {
+  writeToWavecar(f, w.header);
+
+  <span style="color: #a626a4;">for</span> (<span style="color: #c18401;">size_t</span> <span style="color: #8b4513;">ispin</span>(0); ispin &lt; w.descriptors.size(); ispin++) {
+    f.seekp((ispin + 2) * w.header.recordLength);
+    writeToWavecar(f, w.descriptors[ispin]);
+  }
+
+}
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org16eabbd" class="outline-3">
+<h3 id="org16eabbd">G grid</h3>
+<div class="outline-text-3" id="text-org16eabbd">
+</div>
+<div id="outline-container-org4f81d09" class="outline-4">
+<h4 id="org4f81d09">Types</h4>
+<div class="outline-text-4" id="text-org4f81d09">
+<div class="org-src-container">
+<pre class="src src-c++"><span style="color: #a626a4;">using</span> <span style="color: #c18401;">GGrid</span> = <span style="font-weight: bold; text-decoration: underline;">std</span>::<span style="color: #c18401;">pair</span>&lt;KPoint, <span style="font-weight: bold; text-decoration: underline;">std</span>::<span style="color: #c18401;">vector</span>&lt;CellVector&gt;&gt;;
+<span style="color: #a626a4;">using</span> <span style="color: #c18401;">HorizontalGrid</span> = <span style="font-weight: bold; text-decoration: underline;">std</span>::<span style="color: #c18401;">vector</span>&lt;<span style="color: #c18401;">GGrid</span>&gt;;
+<span style="color: #a626a4;">constexpr</span> <span style="color: #c18401;">double</span> <span style="color: #8b4513;">hbarConst</span> = 0.26246582250210965422;
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2ad156e" class="outline-4">
+<h4 id="org2ad156e">Creating a grid from a wavecar</h4>
+<div class="outline-text-4" id="text-org2ad156e">
+<div class="org-src-container">
+<pre class="src src-c++"><span style="font-weight: bold; text-decoration: underline;">std</span>::<span style="color: #c18401;">vector</span>&lt;HorizontalGrid&gt;
+<span style="color: #0184bc;">mkGrid</span>(<span style="color: #a626a4;">const</span> <span style="color: #c18401;">Wavecar</span> &amp;<span style="color: #8b4513;">wavecar</span>) {
+  <span style="font-weight: bold; text-decoration: underline;">std</span>::<span style="color: #c18401;">vector</span>&lt;HorizontalGrid&gt; <span style="color: #8b4513;">result</span>;
+
+  <span style="color: #a626a4;">for</span> (<span style="color: #a626a4;">const</span> <span style="color: #a626a4;">auto</span>&amp; <span style="color: #8b4513;">descriptor</span>: wavecar.descriptors) {
+
+    <span style="color: #c18401;">HorizontalGrid</span> <span style="color: #8b4513;">hGrid</span>;
+
+    <span style="color: #a626a4;">for</span> (<span style="color: #a626a4;">const</span> <span style="color: #a626a4;">auto</span>&amp; <span style="color: #8b4513;">kBand</span>: descriptor.bands) {
+
+
+    <span style="color: #c18401;">size_t</span> <span style="color: #8b4513;">count</span>(0);
+    <span style="color: #a626a4;">const</span> <span style="color: #c18401;">double</span> <span style="color: #8b4513;">actualNumberOfPlaneWaves</span> = kBand.second.coefficients[0].size();
+
+    <span style="color: #a626a4;">const</span> <span style="color: #a626a4;">auto</span>&amp; <span style="color: #8b4513;">K</span>(kBand.first);
+    <span style="font-weight: bold; text-decoration: underline;">std</span>::<span style="color: #c18401;">vector</span>&lt;CellVector&gt; <span style="color: #8b4513;">gs</span>(actualNumberOfPlaneWaves);
+
+    <span style="color: #a626a4;">const</span> <span style="color: #c18401;">int</span> <span style="color: #8b4513;">numberOfPlaneWaves</span>
+      = 3 * <span style="font-weight: bold; text-decoration: underline;">std</span>::ceil(<span style="font-weight: bold; text-decoration: underline;">std</span>::pow(actualNumberOfPlaneWaves, 1.0/3));
+
+    <span style="color: #a626a4;">for</span> (<span style="color: #c18401;">int</span> <span style="color: #8b4513;">z</span>(0); z &lt; 2 * numberOfPlaneWaves; z++) {
+    <span style="color: #a626a4;">for</span> (<span style="color: #c18401;">int</span> <span style="color: #8b4513;">y</span>(0); y &lt; 2 * numberOfPlaneWaves; y++) {
+    <span style="color: #a626a4;">for</span> (<span style="color: #c18401;">int</span> <span style="color: #8b4513;">x</span>(0); x &lt; 2 * numberOfPlaneWaves; x++) {
+
+      <span style="color: #a626a4;">const</span> <span style="color: #a626a4;">auto</span>&amp; <span style="color: #8b4513;">cell</span>(wavecar.header.reciprocal);
+      <span style="color: #a626a4;">const</span> <span style="color: #c18401;">int</span> <span style="color: #8b4513;">G_i</span>[]
+        = { x &gt; numberOfPlaneWaves ? x - 2 * numberOfPlaneWaves : x
+          , y &gt; numberOfPlaneWaves ? y - 2 * numberOfPlaneWaves : y
+          , z &gt; numberOfPlaneWaves ? z - 2 * numberOfPlaneWaves : z
+          };
+
+      <span style="color: #c18401;">double</span> <span style="color: #8b4513;">energy</span>(0);
+      <span style="color: #c18401;">CellVector</span> <span style="color: #8b4513;">g</span>;
+      <span style="color: #a626a4;">for</span> (<span style="color: #c18401;">size_t</span> <span style="color: #8b4513;">i</span>(0); i &lt; 3; i++) {
+        <span style="color: #c18401;">double</span> <span style="color: #8b4513;">component</span>
+          = cell.basis[0][i] * ((<span style="color: #c18401;">double</span>)G_i[0])
+          + cell.basis[1][i] * ((<span style="color: #c18401;">double</span>)G_i[1])
+          + cell.basis[2][i] * ((<span style="color: #c18401;">double</span>)G_i[2])
+          ;
+        component += K[i];
+
+        g[i] = component;
+        energy += component * component / hbarConst;
+      }
+
+      <span style="color: #a626a4;">if</span> (energy &lt; wavecar.header.encut) {
+        count++;
+        gs[count] = g;
+      }
+
+    } <span style="color: #a0a1a7; font-weight: bold;">// </span><span style="color: #a0a1a7;">z</span>
+    } <span style="color: #a0a1a7; font-weight: bold;">// </span><span style="color: #a0a1a7;">y</span>
+    } <span style="color: #a0a1a7; font-weight: bold;">// </span><span style="color: #a0a1a7;">x</span>
+
+    <span style="color: #a626a4;">if</span> (count != actualNumberOfPlaneWaves)
+      <span style="color: #a626a4;">throw</span> <span style="color: #50a14f;">"Count and actualNumberOfPlaneWaves are different"</span>;
+
+    hGrid.push_back({K, gs});
+
+  } <span style="color: #a0a1a7; font-weight: bold;">// </span><span style="color: #a0a1a7;">kBand</span>
+
+    result.push_back(hGrid);
+
+  } <span style="color: #a0a1a7; font-weight: bold;">// </span><span style="color: #a0a1a7;">descriptor</span>
+
+  <span style="color: #a626a4;">return</span> result;
+
+}
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgd0a7cd5" class="outline-3">
+<h3 id="orgd0a7cd5">Mathematical functions</h3>
+<div class="outline-text-3" id="text-orgd0a7cd5">
+</div>
+<div id="outline-container-org991ff01" class="outline-4">
+<h4 id="org991ff01">Products</h4>
+<div class="outline-text-4" id="text-org991ff01">
+<div class="org-src-container">
+<pre class="src src-c++"><span style="color: #c18401;">CellVector</span> <span style="color: #0184bc;">crossProduct</span>(<span style="color: #a626a4;">const</span> <span style="color: #c18401;">CellVector</span> &amp;<span style="color: #8b4513;">a</span>, <span style="color: #a626a4;">const</span> <span style="color: #c18401;">CellVector</span> &amp;<span style="color: #8b4513;">b</span>) {
+  <span style="color: #a626a4;">return</span>
+    { a[1] * b[2] - a[2] * b[1]
+    , a[2] * b[0] - a[0] * b[2]
+    , a[0] * b[1] - a[1] * b[0]
+    };
+}
+
+<span style="color: #c18401;">double</span> <span style="color: #0184bc;">dotProduct</span>(<span style="color: #a626a4;">const</span> <span style="color: #c18401;">CellVector</span> &amp;<span style="color: #8b4513;">a</span>, <span style="color: #a626a4;">const</span> <span style="color: #c18401;">CellVector</span> &amp;<span style="color: #8b4513;">b</span>) {
+  <span style="color: #a626a4;">return</span> <span style="font-weight: bold; text-decoration: underline;">std</span>::inner_product(a.begin(), a.end(), b.begin(), 0.0);
+}
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org4548a56" class="outline-4">
+<h4 id="org4548a56">Cell volume</h4>
+<div class="outline-text-4" id="text-org4548a56">
+<p>
+We can use the products to calculate the cell volume given by a basis
+</p>
+<div class="org-src-container">
+<pre class="src src-c++"><span style="color: #c18401;">double</span> <span style="color: #0184bc;">cellVolume</span>(<span style="color: #a626a4;">const</span> <span style="color: #c18401;">Cell</span> &amp;<span style="color: #8b4513;">c</span>) {
+  <span style="color: #a626a4;">return</span>
+    dotProduct( c.basis[0]
+              , crossProduct( c.basis[1]
+                            , c.basis[2]
+                            )
+              );
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5e4ba69" class="outline-4">
+<h4 id="org5e4ba69">Reciprocal cell</h4>
+<div class="outline-text-4" id="text-org5e4ba69">
+<p>
+Here we calculate the reciprocal cell of a given cell
+</p>
+<div class="org-src-container">
+<pre class="src src-c++"><span style="color: #c18401;">Cell</span> <span style="color: #0184bc;">reciprocalCell</span>(<span style="color: #a626a4;">const</span> <span style="color: #c18401;">Cell</span> &amp;<span style="color: #8b4513;">c</span>) {
+  <span style="color: #c18401;">Cell</span> <span style="color: #8b4513;">r</span>;
+  <span style="color: #a626a4;">for</span> (<span style="color: #c18401;">size_t</span> <span style="color: #8b4513;">i</span>=0; i&lt;3; i++) {
+    <span style="color: #a626a4;">auto</span> <span style="color: #8b4513;">itB</span>(r.basis[i].begin());
+    r.basis[i] = crossProduct( c.basis[(i+1) % 3]
+                             , c.basis[(i+2) % 3]);
+    <span style="font-weight: bold; text-decoration: underline;">std</span>::transform( itB, itB + 3, itB
+                  , [&amp;<span style="color: #8b4513;">c</span>](<span style="color: #c18401;">double</span> <span style="color: #8b4513;">i</span>){ <span style="color: #a626a4;">return</span> i*2*M_PI/c.volume; });
+  }
+  r.volume = cellVolume(r);
+  <span style="color: #a626a4;">return</span> r;
+}
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgfcd79af" class="outline-3">
+<h3 id="orgfcd79af">Putting all together</h3>
+<div class="outline-text-3" id="text-orgfcd79af">
+<p>
+Therefore this simple header-only library looks like this
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c++"><span style="color: #e44649;">#if</span><span style="color: #e44649; font-weight: bold;">n</span><span style="color: #e44649;">def</span> _WAVECAR_HPP_DEFINED
+<span style="color: #e44649;">#define</span> <span style="color: #8b4513;">_WAVECAR_HPP_DEFINED</span>
+
+&lt;&lt;wavecar.hpp-header&gt;&gt;
+
+&lt;&lt;wavecar.hpp-types&gt;&gt;
+
+&lt;&lt;wavecar.hpp-mathfunctions&gt;&gt;
+
+&lt;&lt;wavecar.hpp-parsing&gt;&gt;
+&lt;&lt;wavecar.hpp-writing&gt;&gt;
+&lt;&lt;wavecar.hpp-grid&gt;&gt;
+
+<span style="color: #e44649;">#endif</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orgcbf0f55" class="outline-2">
+<h2 id="orgcbf0f55">Tests</h2>
+<div class="outline-text-2" id="text-orgcbf0f55">
+</div>
+<div id="outline-container-org46892a0" class="outline-3">
+<h3 id="org46892a0">The script <code>wavecar-show</code></h3>
+<div class="outline-text-3" id="text-org46892a0">
+<div class="org-src-container">
+<pre class="src src-c++"><span style="color: #e44649;">#include</span> <span style="color: #50a14f;">&lt;Wavecar.hpp&gt;</span>
+
+<span style="color: #c18401;">int</span> <span style="color: #0184bc;">main</span> (<span style="color: #c18401;">int</span> <span style="color: #8b4513;">argc</span>, <span style="color: #c18401;">char</span> **<span style="color: #8b4513;">argv</span>) {
+
+  <span style="font-weight: bold; text-decoration: underline;">std</span>::cout &lt;&lt; <span style="color: #50a14f;">"&gt;&gt;&gt; Parsing WAVECAR"</span> &lt;&lt; <span style="font-weight: bold; text-decoration: underline;">std</span>::endl;
+  <span style="color: #a626a4;">auto</span> <span style="color: #8b4513;">wavecar</span>(readWavecar(<span style="color: #50a14f;">"WAVECAR"</span>));
+  <span style="color: #a626a4;">auto</span>&amp; <span style="color: #8b4513;">header</span>(wavecar.header);
+
+  <span style="font-weight: bold; text-decoration: underline;">std</span>::cout &lt;&lt; <span style="color: #50a14f;">"recordLength: "</span> &lt;&lt; header.recordLength &lt;&lt; <span style="color: #50a14f;">"\n"</span>
+            &lt;&lt; <span style="color: #50a14f;">"nSpin: "</span> &lt;&lt; header.nSpin &lt;&lt; <span style="color: #50a14f;">"\n"</span>
+            &lt;&lt; <span style="color: #50a14f;">"version: "</span> &lt;&lt; header.version &lt;&lt; <span style="color: #50a14f;">"\n"</span>
+            &lt;&lt; <span style="color: #50a14f;">"nKpoints: "</span> &lt;&lt; header.nKpoints &lt;&lt; <span style="color: #50a14f;">"\n"</span>
+            &lt;&lt; <span style="color: #50a14f;">"nBands: "</span> &lt;&lt; header.nBands &lt;&lt; <span style="color: #50a14f;">"\n"</span>
+            &lt;&lt; <span style="color: #50a14f;">"encut: "</span> &lt;&lt; header.encut &lt;&lt; <span style="color: #50a14f;">"\n"</span>
+            &lt;&lt; <span style="color: #50a14f;">"eFermi: "</span> &lt;&lt; header.eFermi &lt;&lt; <span style="color: #50a14f;">"\n"</span>
+            &lt;&lt; <span style="color: #50a14f;">"volume: "</span> &lt;&lt; header.real.volume &lt;&lt; <span style="color: #50a14f;">"\n"</span>
+            &lt;&lt; <span style="color: #50a14f;">"\n"</span>;
+
+  <span style="font-weight: bold; text-decoration: underline;">std</span>::cout &lt;&lt; <span style="color: #50a14f;">"&gt;&gt;&gt; Creating grids"</span> &lt;&lt; <span style="font-weight: bold; text-decoration: underline;">std</span>::endl;
+  <span style="color: #a626a4;">auto</span> <span style="color: #8b4513;">grids</span>(mkGrid(wavecar));
+  <span style="font-weight: bold; text-decoration: underline;">std</span>::cout &lt;&lt; grids.size() &lt;&lt; <span style="color: #50a14f;">" grids created"</span> &lt;&lt; <span style="font-weight: bold; text-decoration: underline;">std</span>::endl;
+
+  <span style="font-weight: bold; text-decoration: underline;">std</span>::cout &lt;&lt; <span style="color: #50a14f;">"Lattice vectors: \n"</span>;
+  <span style="color: #a626a4;">for</span> (<span style="color: #a626a4;">const</span> <span style="color: #a626a4;">auto</span> &amp;<span style="color: #8b4513;">b</span>: header.real.basis)
+    printf(<span style="color: #50a14f;">"  %f %f %f\n"</span>, b[0], b[1], b[2]);
+
+  <span style="font-weight: bold; text-decoration: underline;">std</span>::cout &lt;&lt; <span style="color: #50a14f;">"Reciprocal vectors: \n"</span>;
+  <span style="color: #a626a4;">for</span> (<span style="color: #a626a4;">const</span> <span style="color: #a626a4;">auto</span> &amp;<span style="color: #8b4513;">b</span>: header.reciprocal.basis)
+    printf(<span style="color: #50a14f;">"  %f %f %f\n"</span>, b[0], b[1], b[2]);
+
+  <span style="color: #a626a4;">auto</span> <span style="color: #8b4513;">wavecar2</span>(<span style="font-weight: bold; text-decoration: underline;">std</span>::ofstream(<span style="color: #50a14f;">"WAVECAR-2"</span>, <span style="font-weight: bold; text-decoration: underline;">std</span>::<span style="font-weight: bold; text-decoration: underline;">ios</span>::binary));
+  <span style="font-weight: bold; text-decoration: underline;">std</span>::cout &lt;&lt; <span style="color: #50a14f;">"Writing WAVECAR-2"</span> &lt;&lt; <span style="font-weight: bold; text-decoration: underline;">std</span>::endl;
+  writeToWavecar(wavecar2, wavecar);
+
+}
+</pre>
+</div>
+
+
+
+
+
+
+<p>
+bibliographystyle:unsrt
+bibliography:README.bib
+</p>
+
+<p>
+#+begin: papis-bibtex-refs :tangle /home/gallo/software/wavecar.hpp/README.bib
+</p>
+<div class="org-src-container">
+<pre class="src src-bibtex"><span style="color: #0184bc;">@article</span>{<span style="font-weight: bold; text-decoration: underline;">LiteratePrograKnuth1984</span>,
+  <span style="color: #8b4513;">author</span> = {Knuth, D. E.},
+  <span style="color: #8b4513;">doi</span> = {<span style="text-decoration: underline;">10.1093/comjnl/27.2.97</span>},
+  <span style="color: #8b4513;">issn</span> = {0010-4620},
+  <span style="color: #8b4513;">issue</span> = {2},
+  <span style="color: #8b4513;">journal</span> = {The Computer Journal},
+  <span style="color: #8b4513;">language</span> = {en},
+  <span style="color: #8b4513;">month</span> = {2},
+  <span style="color: #8b4513;">pages</span> = {97--111},
+  <span style="color: #8b4513;">publisher</span> = {Oxford University Press (OUP)},
+  <span style="color: #8b4513;">title</span> = {Literate Programming},
+  <span style="color: #8b4513;">url</span> = {<span style="text-decoration: underline;">http://dx.doi.org/10.1093/comjnl/27.2.97</span>},
+  <span style="color: #8b4513;">volume</span> = {27},
+  <span style="color: #8b4513;">year</span> = {1984},
+}
+
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Alejandro Gallo</p>
+<p class="date">Created: 2021-03-09 Tue 12:16</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
