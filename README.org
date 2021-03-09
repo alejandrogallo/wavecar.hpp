@@ -477,15 +477,19 @@ mkGrid(const Wavecar &wavecar) {
 #+end_src
 * Tests
   :PROPERTIES:
-  :header-args:c+++: :tangle tests/reader.cpp
   :header-args:c+++: :main no
   :header-args:c+++: :mkdirp t
   :END:
 ** Main function
+  :PROPERTIES:
+  :header-args:c+++: :tangle tests/wavecar-show.cpp
+  :END:
 #+begin_src c++
 #include <Wavecar.hpp>
 
 int main (int argc, char **argv) {
+
+  std::cout << ">>> Parsing WAVECAR" << std::endl;
   auto wavecar(readWavecar("WAVECAR"));
   auto& header(wavecar.header);
 
@@ -499,55 +503,9 @@ int main (int argc, char **argv) {
             << "volume: " << header.real.volume << "\n"
             << "\n";
 
-  //const double hbarConst = 0.26246582250210965422; // 1/eV Ang^2
-
-  size_t count(0);
-  for (const auto& descriptor: wavecar.descriptors) {
-    std::cout << "***\n";
-    const double npl(descriptor.bands[0].second.coefficients[0].size());
-    const int npld(3*std::ceil(std::pow(npl, 1.0/3)));
-    std::cout << "number plane waves: "
-              << npl << "\n"
-              << "npld: " << npld
-              << std::endl
-              ;
-    for (int z(0); z < 2*npld; z++) {
-    for (int y(0); y < 2*npld; y++) {
-    for (int x(0); x < 2*npld; x++) {
-      const auto& cell(wavecar.header.reciprocal);
-      const int C[]
-
-        // = { x
-        //   , y
-        //   , z
-        //   };
-
-        = { x > npld ? x - 2 * npld : x
-          , y > npld ? y - 2 * npld : y
-          , z > npld ? z - 2 * npld : z
-          };
-
-      double energy(0);
-      for (size_t i(0); i < 3; i++) {
-        double component
-          = cell.basis[0][i] * ((double)C[0])
-          + cell.basis[1][i] * ((double)C[1])
-          + cell.basis[2][i] * ((double)C[2])
-          ;
-        //component *= 2 * M_PI;
-        energy += component * component / hbarConst;
-      }
-      if (energy < wavecar.header.encut) {
-        count++;
-      }
-
-    }
-    }
-    }
-  }
-  std::cout << count << std::endl;
-
-
+  std::cout << ">>> Creating grids" << std::endl;
+  auto grids(mkGrid(wavecar));
+  std::cout << grids.size() << " grids created" << std::endl;
 
   std::cout << "Lattice vectors: \n";
   for (const auto &b: header.real.basis)
