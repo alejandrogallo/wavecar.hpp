@@ -57,13 +57,13 @@ struct WavecarHeader {
 
 using KPoint = CellVector;
 using OrbitalCoefficients = std::vector<std::complex<double>>;
-struct VerticalBand {
+struct HorizontalBand {
   std::vector<double> realEnergies;
   std::vector<double> imagEnergies;
   std::vector<double> occupancies;
   std::vector<OrbitalCoefficients> coefficients;
 };
-using KBand = std::pair<KPoint, VerticalBand>;
+using KBand = std::pair<KPoint, HorizontalBand>;
 
 struct WaveDescriptor {
   std::vector<KBand> bands;
@@ -398,6 +398,83 @@ void writeToWavecar(std::ofstream &f, const Wavecar &w) {
 #+end_src
 
 
+** G grid
+
+#+begin_src c++
+
+using GGrid = std::pair<KPoint, std::vector<CellVector>>;
+using HorizontalGrid = std::vector<GGrid>;
+constexpr double hbarConst = 0.26246582250210965422;
+
+std::vector<HorizontalGrid>
+mkGrid(const Wavecar &wavecar) {
+  std::vector<HorizontalGrid> result;
+
+  for (const auto& descriptor: wavecar.descriptors) {
+
+    HorizontalGrid hGrid;
+
+    for (const auto& kBand: descriptor.bands) {
+
+
+    size_t count(0);
+    const double actualNumberOfPlaneWaves = kBand.second.coefficients[0].size();
+
+    const auto& K(kBand.first);
+    std::vector<CellVector> gs(actualNumberOfPlaneWaves);
+
+    const int numberOfPlaneWaves
+      = 3 * std::ceil(std::pow(actualNumberOfPlaneWaves, 1.0/3));
+
+    for (int z(0); z < 2 * numberOfPlaneWaves; z++) {
+    for (int y(0); y < 2 * numberOfPlaneWaves; y++) {
+    for (int x(0); x < 2 * numberOfPlaneWaves; x++) {
+
+      const auto& cell(wavecar.header.reciprocal);
+      const int G_i[]
+        = { x > numberOfPlaneWaves ? x - 2 * numberOfPlaneWaves : x
+          , y > numberOfPlaneWaves ? y - 2 * numberOfPlaneWaves : y
+          , z > numberOfPlaneWaves ? z - 2 * numberOfPlaneWaves : z
+          };
+
+      double energy(0);
+      CellVector g;
+      for (size_t i(0); i < 3; i++) {
+        double component
+          = cell.basis[0][i] * ((double)G_i[0])
+          + cell.basis[1][i] * ((double)G_i[1])
+          + cell.basis[2][i] * ((double)G_i[2])
+          ;
+        component += K[i];
+
+        g[i] = component;
+        energy += component * component / hbarConst;
+      }
+
+      if (energy < wavecar.header.encut) {
+        count++;
+        gs[count] = g;
+      }
+
+    } // z
+    } // y
+    } // x
+
+    if (count != actualNumberOfPlaneWaves)
+      throw "Count and actualNumberOfPlaneWaves are different";
+
+    hGrid.push_back({K, gs});
+
+  } // kBand
+
+    result.push_back(hGrid);
+
+  } // descriptor
+
+  return result;
+
+}
+#+end_src
 * Tests
   :PROPERTIES:
   :header-args:c+++: :tangle tests/reader.cpp
@@ -422,42 +499,42 @@ int main (int argc, char **argv) {
             << "volume: " << header.real.volume << "\n"
             << "\n";
 
-  const double hbarConst = 0.26246582250210965422; // 1/eV Ang^2
+  //const double hbarConst = 0.26246582250210965422; // 1/eV Ang^2
 
   size_t count(0);
   for (const auto& descriptor: wavecar.descriptors) {
     std::cout << "***\n";
     const double npl(descriptor.bands[0].second.coefficients[0].size());
-    const int npld(std::ceil(std::pow(npl, 1.0/3)));
+    const int npld(3*std::ceil(std::pow(npl, 1.0/3)));
     std::cout << "number plane waves: "
               << npl << "\n"
               << "npld: " << npld
               << std::endl
               ;
-    for (int z(0); z < 2 * npld; z++) {
-    for (int y(0); y < 2 * npld; y++) {
-    for (int x(0); x < 2 * npld; x++) {
+    for (int z(0); z < 2*npld; z++) {
+    for (int y(0); y < 2*npld; y++) {
+    for (int x(0); x < 2*npld; x++) {
       const auto& cell(wavecar.header.reciprocal);
-      const int C[3]
+      const int C[]
 
         // = { x
         //   , y
         //   , z
         //   };
 
-        = { x > npld ? x - 2 * npld - 1 : x
-          , y > npld ? y - 2 * npld - 1 : y
-          , z > npld ? z - 2 * npld - 1 : z
+        = { x > npld ? x - 2 * npld : x
+          , y > npld ? y - 2 * npld : y
+          , z > npld ? z - 2 * npld : z
           };
 
       double energy(0);
       for (size_t i(0); i < 3; i++) {
         double component
-          = cell.basis[0][i] * double(C[i])
-          + cell.basis[1][i] * double(C[i])
-          + cell.basis[2][i] * double(C[i])
+          = cell.basis[0][i] * ((double)C[0])
+          + cell.basis[1][i] * ((double)C[1])
+          + cell.basis[2][i] * ((double)C[2])
           ;
-        component *= 2 * M_PI;
+        //component *= 2 * M_PI;
         energy += component * component / hbarConst;
       }
       if (energy < wavecar.header.encut) {
@@ -474,11 +551,11 @@ int main (int argc, char **argv) {
 
   std::cout << "Lattice vectors: \n";
   for (const auto &b: header.real.basis)
-    printf("- %f %f %f\n", b[0], b[1], b[2]);
+    printf("  %f %f %f\n", b[0], b[1], b[2]);
 
   std::cout << "Reciprocal vectors: \n";
   for (const auto &b: header.reciprocal.basis)
-    printf("- %f %f %f\n", b[0], b[1], b[2]);
+    printf("  %f %f %f\n", b[0], b[1], b[2]);
 
   auto wavecar2(std::ofstream("WAVECAR-2", std::ios::binary));
   std::cout << "Writing WAVECAR-2" << std::endl;

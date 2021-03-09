@@ -31,13 +31,13 @@ struct WavecarHeader {
 
 using KPoint = CellVector;
 using OrbitalCoefficients = std::vector<std::complex<double>>;
-struct VerticalBand {
+struct HorizontalBand {
   std::vector<double> realEnergies;
   std::vector<double> imagEnergies;
   std::vector<double> occupancies;
   std::vector<OrbitalCoefficients> coefficients;
 };
-using KBand = std::pair<KPoint, VerticalBand>;
+using KBand = std::pair<KPoint, HorizontalBand>;
 
 struct WaveDescriptor {
   std::vector<KBand> bands;
@@ -247,5 +247,78 @@ void writeToWavecar(std::ofstream &f, const Wavecar &w) {
     f.seekp((ispin + 2) * w.header.recordLength);
     writeToWavecar(f, w.descriptors[ispin]);
   }
+
+}
+
+using GGrid = std::pair<KPoint, std::vector<CellVector>>;
+using HorizontalGrid = std::vector<GGrid>;
+constexpr double hbarConst = 0.26246582250210965422;
+
+std::vector<HorizontalGrid>
+mkGrid(const Wavecar &wavecar) {
+  std::vector<HorizontalGrid> result;
+
+  for (const auto& descriptor: wavecar.descriptors) {
+
+    HorizontalGrid hGrid;
+
+    for (const auto& kBand: descriptor.bands) {
+
+
+    size_t count(0);
+    const double actualNumberOfPlaneWaves = kBand.second.coefficients[0].size();
+
+    const auto& K(kBand.first);
+    std::vector<CellVector> gs(actualNumberOfPlaneWaves);
+
+    const int numberOfPlaneWaves
+      = 3 * std::ceil(std::pow(actualNumberOfPlaneWaves, 1.0/3));
+
+    for (int z(0); z < 2 * numberOfPlaneWaves; z++) {
+    for (int y(0); y < 2 * numberOfPlaneWaves; y++) {
+    for (int x(0); x < 2 * numberOfPlaneWaves; x++) {
+
+      const auto& cell(wavecar.header.reciprocal);
+      const int G_i[]
+        = { x > numberOfPlaneWaves ? x - 2 * numberOfPlaneWaves : x
+          , y > numberOfPlaneWaves ? y - 2 * numberOfPlaneWaves : y
+          , z > numberOfPlaneWaves ? z - 2 * numberOfPlaneWaves : z
+          };
+
+      double energy(0);
+      CellVector g;
+      for (size_t i(0); i < 3; i++) {
+        double component
+          = cell.basis[0][i] * ((double)G_i[0])
+          + cell.basis[1][i] * ((double)G_i[1])
+          + cell.basis[2][i] * ((double)G_i[2])
+          ;
+        component += K[i];
+
+        g[i] = component;
+        energy += component * component / hbarConst;
+      }
+
+      if (energy < wavecar.header.encut) {
+        count++;
+        gs[count] = g;
+      }
+
+    } // z
+    } // y
+    } // x
+
+    if (count != actualNumberOfPlaneWaves)
+      throw "Count and actualNumberOfPlaneWaves are different";
+
+    hGrid.push_back({K, gs});
+
+  } // kBand
+
+    result.push_back(hGrid);
+
+  } // descriptor
+
+  return result;
 
 }
