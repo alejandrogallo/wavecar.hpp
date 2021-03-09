@@ -1,3 +1,6 @@
+#ifndef _WAVECAR_HPP_DEFINED
+#define _WAVECAR_HPP_DEFINED
+
 #include <iostream>
 #include <fstream>
 #include <map>
@@ -48,6 +51,9 @@ struct Wavecar {
   WavecarHeader header;
   std::vector<WaveDescriptor> descriptors;
 };
+using GGrid = std::pair<KPoint, std::vector<CellVector>>;
+using HorizontalGrid = std::vector<GGrid>;
+constexpr double hbarConst = 0.26246582250210965422;
 
 CellVector crossProduct(const CellVector &a, const CellVector &b) {
   return
@@ -60,7 +66,6 @@ CellVector crossProduct(const CellVector &a, const CellVector &b) {
 double dotProduct(const CellVector &a, const CellVector &b) {
   return std::inner_product(a.begin(), a.end(), b.begin(), 0.0);
 }
-
 double cellVolume(const Cell &c) {
   return
     dotProduct( c.basis[0]
@@ -69,7 +74,6 @@ double cellVolume(const Cell &c) {
                             )
               );
 }
-
 Cell reciprocalCell(const Cell &c) {
   Cell r;
   for (size_t i=0; i<3; i++) {
@@ -128,7 +132,6 @@ readWaveWaveDescriptor( const std::string &fileName
          };
 
 }
-
 WavecarHeader readWavecarHeader(const std::string &fileName) {
   WavecarHeader header;
   std::fstream file(fileName, std::ios::binary | std::ios::in);
@@ -172,7 +175,6 @@ WavecarHeader readWavecarHeader(const std::string &fileName) {
 
   return header;
 }
-
 Wavecar readWavecar(const std::string &fileName) {
   auto header(readWavecarHeader(fileName));
   std::vector<WaveDescriptor> descriptors;
@@ -188,15 +190,12 @@ Wavecar readWavecar(const std::string &fileName) {
   return {header, descriptors};
 
 }
-
 void writeToWavecar(std::ofstream &f, const CellVector &v) {
   f.write((char*)v.data(), sizeof(CellVector));
 }
-
 void writeToWavecar(std::ofstream &f, const Cell &c) {
   for (const auto& v: c.basis) writeToWavecar(f, v);
 }
-
 void writeToWavecar(std::ofstream &f, const WavecarHeader &h) {
   const auto writeInt
     = [&f](const size_t &i) {
@@ -216,7 +215,6 @@ void writeToWavecar(std::ofstream &f, const WavecarHeader &h) {
   writeToWavecar(f, h.real);
   f.write((char*)&h.eFermi, sizeof(double));
 }
-
 void writeToWavecar(std::ofstream &f, const WaveDescriptor &d) {
   for (auto const& kband: d.bands)  { // spin loop
     const auto& kVector(kband.first);
@@ -239,7 +237,6 @@ void writeToWavecar(std::ofstream &f, const WaveDescriptor &d) {
 
   }
 }
-
 void writeToWavecar(std::ofstream &f, const Wavecar &w) {
   writeToWavecar(f, w.header);
 
@@ -249,11 +246,6 @@ void writeToWavecar(std::ofstream &f, const Wavecar &w) {
   }
 
 }
-
-using GGrid = std::pair<KPoint, std::vector<CellVector>>;
-using HorizontalGrid = std::vector<GGrid>;
-constexpr double hbarConst = 0.26246582250210965422;
-
 std::vector<HorizontalGrid>
 mkGrid(const Wavecar &wavecar) {
   std::vector<HorizontalGrid> result;
@@ -322,3 +314,5 @@ mkGrid(const Wavecar &wavecar) {
   return result;
 
 }
+
+#endif

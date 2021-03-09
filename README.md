@@ -1,37 +1,40 @@
 
 # Table of Contents
 
--   [Wavecar.hpp](#orga1f52b1)
-    -   [Introduction](#org54286e3)
-    -   [Header](#org812230c)
-    -   [Main types](#org1c6d7e6)
-    -   [Mathematical functions](#org990d144)
-        -   [Products](#org731e074)
-        -   [Cell volume](#org8423af0)
-        -   [Reciprocal cell](#org481b2e5)
-    -   [`WAVECAR` parsing](#org5468295)
-        -   [Understanding the code](#org939287a)
-        -   [Wave descriptor](#org89a32b3)
-        -   [Header](#org4fea553)
-        -   [The whole `WAVECAR`](#org906b4c2)
-    -   [`WAVECAR` writing](#org111baee)
-        -   [`CellVector`](#org6e7cd55)
-        -   [`Cell`](#org9cbab66)
-        -   [`WavecarHeader`](#orgd4bbead)
-        -   [`WaveDescriptor`](#orgd3006d9)
-        -   [`Wavecar`](#orgd84474a)
-    -   [G grid](#org31fc710)
--   [Tests](#org5e403e8)
-    -   [Main function](#orge7e89d3)
+-   [Wavecar.hpp](#org0fe4955)
+    -   [Introduction](#orgd412abc)
+    -   [Header](#orgd3e480f)
+    -   [Main types](#orgc511b9c)
+    -   [`WAVECAR` parsing](#org2312ab5)
+        -   [Understanding the code](#org3e667fc)
+        -   [Wave descriptor](#org8a3cb76)
+        -   [Header](#org04f0860)
+        -   [The whole `WAVECAR`](#org5d51ee8)
+    -   [`WAVECAR` writing](#org466db74)
+        -   [`CellVector`](#orgcb7cdab)
+        -   [`Cell`](#org8895563)
+        -   [`WavecarHeader`](#org06d76ab)
+        -   [`WaveDescriptor`](#orga45a6b4)
+        -   [`Wavecar`](#orgee30158)
+    -   [G grid](#orgc645aaa)
+        -   [Types](#orgf2ff118)
+        -   [Creating a grid from a wavecar](#orgb34828f)
+    -   [Mathematical functions](#org7efc37d)
+        -   [Products](#org349915f)
+        -   [Cell volume](#orgcb4aec9)
+        -   [Reciprocal cell](#org3e1c1b9)
+    -   [Putting all together](#org61a1e80)
+-   [Tests](#orgb2aa472)
+    -   [The script `wavecar-show`](#org7ea5f97)
 
 
 
-<a id="orga1f52b1"></a>
+<a id="org0fe4955"></a>
 
 # Wavecar.hpp
 
 
-<a id="org54286e3"></a>
+<a id="orgd412abc"></a>
 
 ## Introduction
 
@@ -44,7 +47,7 @@ so we will try to keep the documentation and the code in the same place.
 As a convenience you can find the header file in the `include` directory.
 
 
-<a id="org812230c"></a>
+<a id="orgd3e480f"></a>
 
 ## Header
 
@@ -63,7 +66,7 @@ We will only need libraries available in the standard library:
     #include <complex>
 
 
-<a id="org1c6d7e6"></a>
+<a id="orgc511b9c"></a>
 
 ## Main types
 
@@ -109,70 +112,12 @@ We define the main structure for the WAVECAR header,
     };
 
 
-<a id="org990d144"></a>
-
-## Mathematical functions
-
-
-<a id="org731e074"></a>
-
-### Products
-
-    CellVector crossProduct(const CellVector &a, const CellVector &b) {
-      return
-        { a[1] * b[2] - a[2] * b[1]
-        , a[2] * b[0] - a[0] * b[2]
-        , a[0] * b[1] - a[1] * b[0]
-        };
-    }
-    
-    double dotProduct(const CellVector &a, const CellVector &b) {
-      return std::inner_product(a.begin(), a.end(), b.begin(), 0.0);
-    }
-
-
-<a id="org8423af0"></a>
-
-### Cell volume
-
-We can use the products to calculate the cell volume given by a basis
-
-    double cellVolume(const Cell &c) {
-      return
-        dotProduct( c.basis[0]
-                  , crossProduct( c.basis[1]
-                                , c.basis[2]
-                                )
-                  );
-    }
-
-
-<a id="org481b2e5"></a>
-
-### Reciprocal cell
-
-Here we calculate the reciprocal cell of a given cell
-
-    Cell reciprocalCell(const Cell &c) {
-      Cell r;
-      for (size_t i=0; i<3; i++) {
-        auto itB(r.basis[i].begin());
-        r.basis[i] = crossProduct( c.basis[(i+1) % 3]
-                                 , c.basis[(i+2) % 3]);
-        std::transform( itB, itB + 3, itB
-                      , [&c](double i){ return i*2*M_PI/c.volume; });
-      }
-      r.volume = cellVolume(r);
-      return r;
-    }
-
-
-<a id="org5468295"></a>
+<a id="org2312ab5"></a>
 
 ## `WAVECAR` parsing
 
 
-<a id="org939287a"></a>
+<a id="org3e667fc"></a>
 
 ### Understanding the code
 
@@ -183,8 +128,8 @@ backwards engineer the main structure of the file.
 
 Here is an excerpt of a hexdump of a typical `VASP5` format `WAVECAR` file:
 
-<div class="figure" id="org22effdb">
-<pre class="example" id="org6a21e79">
+<div class="figure" id="orgac6a6b9">
+<pre class="example" id="org1419842">
                   BYTES      
  ADDRESS  1 2  3 4  4 6  7 8  | Comments
 ==============================|=========
@@ -242,7 +187,7 @@ Here there are a couple of things we should remark,
     -   the plane-wave coefficients.
 
 
-<a id="org89a32b3"></a>
+<a id="org8a3cb76"></a>
 
 ### Wave descriptor
 
@@ -293,7 +238,7 @@ Here there are a couple of things we should remark,
     }
 
 
-<a id="org4fea553"></a>
+<a id="org04f0860"></a>
 
 ### Header
 
@@ -342,7 +287,7 @@ Here there are a couple of things we should remark,
     }
 
 
-<a id="org906b4c2"></a>
+<a id="org5d51ee8"></a>
 
 ### The whole `WAVECAR`
 
@@ -363,14 +308,14 @@ Here there are a couple of things we should remark,
     }
 
 
-<a id="org111baee"></a>
+<a id="org466db74"></a>
 
 ## `WAVECAR` writing
 
 Our writer writes `WAVECAR` files in the `VASP5` version.
 
 
-<a id="org6e7cd55"></a>
+<a id="orgcb7cdab"></a>
 
 ### `CellVector`
 
@@ -379,7 +324,7 @@ Our writer writes `WAVECAR` files in the `VASP5` version.
     }
 
 
-<a id="org9cbab66"></a>
+<a id="org8895563"></a>
 
 ### `Cell`
 
@@ -390,7 +335,7 @@ In the case of a cell we only write the basis elements in order,
     }
 
 
-<a id="orgd4bbead"></a>
+<a id="org06d76ab"></a>
 
 ### `WavecarHeader`
 
@@ -418,7 +363,7 @@ correct one that `VASP` is expecting.
     }
 
 
-<a id="orgd3006d9"></a>
+<a id="orga45a6b4"></a>
 
 ### `WaveDescriptor`
 
@@ -446,7 +391,7 @@ correct one that `VASP` is expecting.
     }
 
 
-<a id="orgd84474a"></a>
+<a id="orgee30158"></a>
 
 ### `Wavecar`
 
@@ -464,15 +409,24 @@ and then the wave descriptor.
     }
 
 
-<a id="org31fc710"></a>
+<a id="orgc645aaa"></a>
 
 ## G grid
 
-    
+
+<a id="orgf2ff118"></a>
+
+### Types
+
     using GGrid = std::pair<KPoint, std::vector<CellVector>>;
     using HorizontalGrid = std::vector<GGrid>;
     constexpr double hbarConst = 0.26246582250210965422;
-    
+
+
+<a id="orgb34828f"></a>
+
+### Creating a grid from a wavecar
+
     std::vector<HorizontalGrid>
     mkGrid(const Wavecar &wavecar) {
       std::vector<HorizontalGrid> result;
@@ -543,14 +497,94 @@ and then the wave descriptor.
     }
 
 
-<a id="org5e403e8"></a>
+<a id="org7efc37d"></a>
+
+## Mathematical functions
+
+
+<a id="org349915f"></a>
+
+### Products
+
+    CellVector crossProduct(const CellVector &a, const CellVector &b) {
+      return
+        { a[1] * b[2] - a[2] * b[1]
+        , a[2] * b[0] - a[0] * b[2]
+        , a[0] * b[1] - a[1] * b[0]
+        };
+    }
+    
+    double dotProduct(const CellVector &a, const CellVector &b) {
+      return std::inner_product(a.begin(), a.end(), b.begin(), 0.0);
+    }
+
+
+<a id="orgcb4aec9"></a>
+
+### Cell volume
+
+We can use the products to calculate the cell volume given by a basis
+
+    double cellVolume(const Cell &c) {
+      return
+        dotProduct( c.basis[0]
+                  , crossProduct( c.basis[1]
+                                , c.basis[2]
+                                )
+                  );
+    }
+
+
+<a id="org3e1c1b9"></a>
+
+### Reciprocal cell
+
+Here we calculate the reciprocal cell of a given cell
+
+    Cell reciprocalCell(const Cell &c) {
+      Cell r;
+      for (size_t i=0; i<3; i++) {
+        auto itB(r.basis[i].begin());
+        r.basis[i] = crossProduct( c.basis[(i+1) % 3]
+                                 , c.basis[(i+2) % 3]);
+        std::transform( itB, itB + 3, itB
+                      , [&c](double i){ return i*2*M_PI/c.volume; });
+      }
+      r.volume = cellVolume(r);
+      return r;
+    }
+
+
+<a id="org61a1e80"></a>
+
+## Putting all together
+
+Therefore this simple header-only library looks like this
+
+    #ifndef _WAVECAR_HPP_DEFINED
+    #define _WAVECAR_HPP_DEFINED
+    
+    <<wavecar.hpp-header>>
+    
+    <<wavecar.hpp-types>>
+    
+    <<wavecar.hpp-mathfunctions>>
+    
+    <<wavecar.hpp-parsing>>
+    <<wavecar.hpp-writing>>
+    <<wavecar.hpp-grid>>
+    
+    #endif
+
+
+<a id="orgb2aa472"></a>
 
 # Tests
 
 
-<a id="orge7e89d3"></a>
+<a id="org7ea5f97"></a>
 
-## Main function
+## The script `wavecar-show`
 
     #include <Wavecar.hpp>
     
@@ -593,5 +627,4 @@ and then the wave descriptor.
 <a id="LiteratePrograKnuth1984"></a>[LiteratePrograKnuth1984] Knuth, Literate Programming, <i>The Computer Journal</i>, <b>27</b>, 97-111 (1984). <a href="http://dx.doi.org/10.1093/comjnl/27.2.97">link</a>. <a href="http://dx.doi.org/10.1093/comjnl/27.2.97">doi</a>. [↩](#39f041f6b1d2d698620dbd1d6c83c888)
 
 \#+begin: papis-bibtex-refs :tangle /home/gallo/software/wavecar.hpp/README.bib
-\#+end<sub>src</sub>
 

@@ -2,10 +2,6 @@
 #+title: Wavecar.hpp
 #+options: num:nil
 * Wavecar.hpp
-  :PROPERTIES:
-  :header-args:c+++: :tangle include/Wavecar.hpp
-  :header-args:c+++: :main no
-  :END:
 ** Introduction
 This package implements a C++11 header-only library
 for reading =WAVECAR= files in the =VASP5= format.
@@ -18,7 +14,7 @@ As a convenience you can find the header file in the =include= directory.
 ** Header
 We will only need libraries available in the standard library:
 
-#+begin_src c++
+#+begin_src c++ :noweb-ref wavecar.hpp-header
 #include <iostream>
 #include <fstream>
 #include <map>
@@ -33,6 +29,10 @@ We will only need libraries available in the standard library:
 #+end_src
 
 ** Main types
+   :PROPERTIES:
+   :header-args:c++: :noweb-ref wavecar.hpp-types
+   :END:
+   
 We define the main structure for the WAVECAR header,
 
 #+begin_src c++
@@ -76,54 +76,11 @@ struct Wavecar {
 };
 #+end_src
 
-** Mathematical functions
-*** Products
-#+begin_src c++
-CellVector crossProduct(const CellVector &a, const CellVector &b) {
-  return
-    { a[1] * b[2] - a[2] * b[1]
-    , a[2] * b[0] - a[0] * b[2]
-    , a[0] * b[1] - a[1] * b[0]
-    };
-}
-
-double dotProduct(const CellVector &a, const CellVector &b) {
-  return std::inner_product(a.begin(), a.end(), b.begin(), 0.0);
-}
-#+end_src
-
-
-*** Cell volume
-We can use the products to calculate the cell volume given by a basis
-#+begin_src c++
-double cellVolume(const Cell &c) {
-  return
-    dotProduct( c.basis[0]
-              , crossProduct( c.basis[1]
-                            , c.basis[2]
-                            )
-              );
-}
-#+end_src
-
-*** Reciprocal cell
-Here we calculate the reciprocal cell of a given cell
-#+begin_src c++
-Cell reciprocalCell(const Cell &c) {
-  Cell r;
-  for (size_t i=0; i<3; i++) {
-    auto itB(r.basis[i].begin());
-    r.basis[i] = crossProduct( c.basis[(i+1) % 3]
-                             , c.basis[(i+2) % 3]);
-    std::transform( itB, itB + 3, itB
-                  , [&c](double i){ return i*2*M_PI/c.volume; });
-  }
-  r.volume = cellVolume(r);
-  return r;
-}
-#+end_src
-
 ** =WAVECAR= parsing
+   :PROPERTIES:
+   :header-args:c++: :noweb-ref wavecar.hpp-parsing
+   :END:
+   
 *** Understanding the code
 
 It can be quite challenging sometimes to understand binary formats
@@ -311,6 +268,9 @@ Wavecar readWavecar(const std::string &fileName) {
 
 
 ** =WAVECAR= writing
+   :PROPERTIES:
+   :header-args:c++: :noweb-ref wavecar.hpp-writing
+   :END:
 
 Our writer writes =WAVECAR= files in the =VASP5= version.
 
@@ -399,13 +359,20 @@ void writeToWavecar(std::ofstream &f, const Wavecar &w) {
 
 
 ** G grid
+   :PROPERTIES:
+   :header-args:c++: :noweb-ref wavecar.hpp-grid
+   :END:
+*** Types
 
-#+begin_src c++
-
+#+begin_src c++ :noweb-ref wavecar.hpp-types
 using GGrid = std::pair<KPoint, std::vector<CellVector>>;
 using HorizontalGrid = std::vector<GGrid>;
 constexpr double hbarConst = 0.26246582250210965422;
+#+end_src
 
+*** Creating a grid from a wavecar
+
+ #+begin_src c++
 std::vector<HorizontalGrid>
 mkGrid(const Wavecar &wavecar) {
   std::vector<HorizontalGrid> result;
@@ -474,13 +441,88 @@ mkGrid(const Wavecar &wavecar) {
   return result;
 
 }
+ #+end_src
+** Mathematical functions
+   :PROPERTIES:
+   :header-args:c++: :noweb-ref wavecar.hpp-mathfunctions
+   :END:
+*** Products
+#+begin_src c++
+CellVector crossProduct(const CellVector &a, const CellVector &b) {
+  return
+    { a[1] * b[2] - a[2] * b[1]
+    , a[2] * b[0] - a[0] * b[2]
+    , a[0] * b[1] - a[1] * b[0]
+    };
+}
+
+double dotProduct(const CellVector &a, const CellVector &b) {
+  return std::inner_product(a.begin(), a.end(), b.begin(), 0.0);
+}
 #+end_src
+
+
+*** Cell volume
+We can use the products to calculate the cell volume given by a basis
+#+begin_src c++
+double cellVolume(const Cell &c) {
+  return
+    dotProduct( c.basis[0]
+              , crossProduct( c.basis[1]
+                            , c.basis[2]
+                            )
+              );
+}
+#+end_src
+
+*** Reciprocal cell
+Here we calculate the reciprocal cell of a given cell
+#+begin_src c++
+Cell reciprocalCell(const Cell &c) {
+  Cell r;
+  for (size_t i=0; i<3; i++) {
+    auto itB(r.basis[i].begin());
+    r.basis[i] = crossProduct( c.basis[(i+1) % 3]
+                             , c.basis[(i+2) % 3]);
+    std::transform( itB, itB + 3, itB
+                  , [&c](double i){ return i*2*M_PI/c.volume; });
+  }
+  r.volume = cellVolume(r);
+  return r;
+}
+#+end_src
+
+** Putting all together
+  :PROPERTIES:
+  :header-args:c+++: :tangle include/Wavecar.hpp
+  :header-args:c+++: :main no
+  :END:
+Therefore this simple header-only library looks like this
+
+#+begin_src c++ :noweb no-export
+#ifndef _WAVECAR_HPP_DEFINED
+#define _WAVECAR_HPP_DEFINED
+
+<<wavecar.hpp-header>>
+
+<<wavecar.hpp-types>>
+
+<<wavecar.hpp-mathfunctions>>
+
+<<wavecar.hpp-parsing>>
+<<wavecar.hpp-writing>>
+<<wavecar.hpp-grid>>
+
+#endif
+#+end_src
+
+
 * Tests
   :PROPERTIES:
   :header-args:c+++: :main no
   :header-args:c+++: :mkdirp t
   :END:
-** Main function
+** The script =wavecar-show=
   :PROPERTIES:
   :header-args:c+++: :tangle tests/wavecar-show.cpp
   :END:
