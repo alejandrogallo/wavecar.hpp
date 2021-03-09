@@ -2,13 +2,18 @@ TEST_BINARIES = tests/wavecar-show
 
 test: $(TEST_BINARIES)
 
-tests/%: tests/%.cpp
-	$(CXX) -g -fmax-errors=1 -Werror -std=c++11 --pedantic -Wall -I include/ -o $@ $<
+$(TEST_BINARIES): include/Wavecar.hpp
 
-include/Wavecar.hpp: main.org
+CXXFLAGS = -g \
+          -D_GLIBCXX_ASSERTIONS \
+          -D_FORTIFY_SOURCE=2 \
+          -fmax-errors=1 \
+          -Werror \
+          -std=c++11 \
+          -pedantic \
+          --all-warnings \
+          -Wall \
+          -I include/ \
+
+include/Wavecar.hpp:
 	emacs -q --batch --eval "(progn (require 'org) (find-file \"$<\") (org-babel-tangle))" main.org
-
-README.html: main.html
-	mv $< $@
-
-all: README.html
