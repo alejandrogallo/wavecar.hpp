@@ -1,38 +1,37 @@
 
 # Table of Contents
 
--   [Wavecar.hpp](#org5f394a0)
-    -   [Introduction](#org9d81e17)
-    -   [Header](#org5bea436)
-    -   [Main types](#orgbe2485b)
-    -   [Mathematical functions](#org3666e0a)
-        -   [Products](#org3a82c24)
-        -   [Cell volume](#orgbdd593b)
-        -   [Reciprocal cell](#org2185285)
-    -   [`WAVECAR` parsing](#orgbb4052f)
-        -   [Understanding the code](#orgdba506d)
-        -   [Wave descriptor](#org93f623f)
-        -   [Header](#org8f42eef)
-        -   [The whole `WAVECAR`](#org26ca981)
-    -   [`WAVECAR` writing](#orge12e0cc)
-        -   [`CellVector`](#org724976a)
-        -   [`Cell`](#orga65c08c)
-        -   [`WavecarHeader`](#orgc9761ee)
-        -   [`WaveDescriptor`](#orgbad7a05)
-        -   [`Wavecar`](#orgdd77eb1)
-    -   [G grid](#org9adb297)
--   [Tests](#org36de094)
-    -   [Main function](#orgc410bba)
--   [Notes](#org5cafeef)
+-   [Wavecar.hpp](#orga1f52b1)
+    -   [Introduction](#org54286e3)
+    -   [Header](#org812230c)
+    -   [Main types](#org1c6d7e6)
+    -   [Mathematical functions](#org990d144)
+        -   [Products](#org731e074)
+        -   [Cell volume](#org8423af0)
+        -   [Reciprocal cell](#org481b2e5)
+    -   [`WAVECAR` parsing](#org5468295)
+        -   [Understanding the code](#org939287a)
+        -   [Wave descriptor](#org89a32b3)
+        -   [Header](#org4fea553)
+        -   [The whole `WAVECAR`](#org906b4c2)
+    -   [`WAVECAR` writing](#org111baee)
+        -   [`CellVector`](#org6e7cd55)
+        -   [`Cell`](#org9cbab66)
+        -   [`WavecarHeader`](#orgd4bbead)
+        -   [`WaveDescriptor`](#orgd3006d9)
+        -   [`Wavecar`](#orgd84474a)
+    -   [G grid](#org31fc710)
+-   [Tests](#org5e403e8)
+    -   [Main function](#orge7e89d3)
 
 
 
-<a id="org5f394a0"></a>
+<a id="orga1f52b1"></a>
 
 # Wavecar.hpp
 
 
-<a id="org9d81e17"></a>
+<a id="org54286e3"></a>
 
 ## Introduction
 
@@ -45,7 +44,7 @@ so we will try to keep the documentation and the code in the same place.
 As a convenience you can find the header file in the `include` directory.
 
 
-<a id="org5bea436"></a>
+<a id="org812230c"></a>
 
 ## Header
 
@@ -64,7 +63,7 @@ We will only need libraries available in the standard library:
     #include <complex>
 
 
-<a id="orgbe2485b"></a>
+<a id="org1c6d7e6"></a>
 
 ## Main types
 
@@ -110,12 +109,12 @@ We define the main structure for the WAVECAR header,
     };
 
 
-<a id="org3666e0a"></a>
+<a id="org990d144"></a>
 
 ## Mathematical functions
 
 
-<a id="org3a82c24"></a>
+<a id="org731e074"></a>
 
 ### Products
 
@@ -132,7 +131,7 @@ We define the main structure for the WAVECAR header,
     }
 
 
-<a id="orgbdd593b"></a>
+<a id="org8423af0"></a>
 
 ### Cell volume
 
@@ -148,7 +147,7 @@ We can use the products to calculate the cell volume given by a basis
     }
 
 
-<a id="org2185285"></a>
+<a id="org481b2e5"></a>
 
 ### Reciprocal cell
 
@@ -168,12 +167,12 @@ Here we calculate the reciprocal cell of a given cell
     }
 
 
-<a id="orgbb4052f"></a>
+<a id="org5468295"></a>
 
 ## `WAVECAR` parsing
 
 
-<a id="orgdba506d"></a>
+<a id="org939287a"></a>
 
 ### Understanding the code
 
@@ -184,8 +183,8 @@ backwards engineer the main structure of the file.
 
 Here is an excerpt of a hexdump of a typical `VASP5` format `WAVECAR` file:
 
-<div class="figure" id="org5e6313f">
-<pre class="example" id="org806f2e8">
+<div class="figure" id="org22effdb">
+<pre class="example" id="org6a21e79">
                   BYTES      
  ADDRESS  1 2  3 4  4 6  7 8  | Comments
 ==============================|=========
@@ -243,7 +242,7 @@ Here there are a couple of things we should remark,
     -   the plane-wave coefficients.
 
 
-<a id="org93f623f"></a>
+<a id="org89a32b3"></a>
 
 ### Wave descriptor
 
@@ -294,7 +293,7 @@ Here there are a couple of things we should remark,
     }
 
 
-<a id="org8f42eef"></a>
+<a id="org4fea553"></a>
 
 ### Header
 
@@ -343,7 +342,7 @@ Here there are a couple of things we should remark,
     }
 
 
-<a id="org26ca981"></a>
+<a id="org906b4c2"></a>
 
 ### The whole `WAVECAR`
 
@@ -364,14 +363,14 @@ Here there are a couple of things we should remark,
     }
 
 
-<a id="orge12e0cc"></a>
+<a id="org111baee"></a>
 
 ## `WAVECAR` writing
 
 Our writer writes `WAVECAR` files in the `VASP5` version.
 
 
-<a id="org724976a"></a>
+<a id="org6e7cd55"></a>
 
 ### `CellVector`
 
@@ -380,7 +379,7 @@ Our writer writes `WAVECAR` files in the `VASP5` version.
     }
 
 
-<a id="orga65c08c"></a>
+<a id="org9cbab66"></a>
 
 ### `Cell`
 
@@ -391,7 +390,7 @@ In the case of a cell we only write the basis elements in order,
     }
 
 
-<a id="orgc9761ee"></a>
+<a id="orgd4bbead"></a>
 
 ### `WavecarHeader`
 
@@ -419,7 +418,7 @@ correct one that `VASP` is expecting.
     }
 
 
-<a id="orgbad7a05"></a>
+<a id="orgd3006d9"></a>
 
 ### `WaveDescriptor`
 
@@ -447,7 +446,7 @@ correct one that `VASP` is expecting.
     }
 
 
-<a id="orgdd77eb1"></a>
+<a id="orgd84474a"></a>
 
 ### `Wavecar`
 
@@ -465,7 +464,7 @@ and then the wave descriptor.
     }
 
 
-<a id="org9adb297"></a>
+<a id="org31fc710"></a>
 
 ## G grid
 
@@ -544,12 +543,12 @@ and then the wave descriptor.
     }
 
 
-<a id="org36de094"></a>
+<a id="org5e403e8"></a>
 
 # Tests
 
 
-<a id="orgc410bba"></a>
+<a id="orge7e89d3"></a>
 
 ## Main function
 
@@ -594,92 +593,5 @@ and then the wave descriptor.
 <a id="LiteratePrograKnuth1984"></a>[LiteratePrograKnuth1984] Knuth, Literate Programming, <i>The Computer Journal</i>, <b>27</b>, 97-111 (1984). <a href="http://dx.doi.org/10.1093/comjnl/27.2.97">link</a>. <a href="http://dx.doi.org/10.1093/comjnl/27.2.97">doi</a>. [↩](#39f041f6b1d2d698620dbd1d6c83c888)
 
 \#+begin: papis-bibtex-refs :tangle /home/gallo/software/wavecar.hpp/README.bib
-\#+
-
-
-<a id="org5cafeef"></a>
-
-# Notes
-
-    TYPE wavedes
-        REAL(q) RSPIN                 ! spin multiplicity
-        REAL(q) ENMAX                 ! energy cutoff
-        INTEGER NRSPINORS             ! number of spinors (1 for collinear, 2 for non collinear)
-        INTEGER NGDIM                 ! first dimension of any array related to the plane wave basis
-        INTEGER NRPLWV                ! first dimension of wavefunction array
-        ! collinear:  NRPLWV=NGDIM, noncollinear:  NRPLWV=2*NGDIM
-        INTEGER NRPLWV_RED            ! local number of coefficients in wave function array after data redistribution
-        INTEGER NPROD                 ! first dimension of projected wave array
-        INTEGER NPRO                  ! local number of elements in projected wave array
-        INTEGER NPRO_TOT              ! total number of elements (summed over all nodes)
-        ! NPRO, NPROD, and NPRO_TOT are all doubled in the non collinear version
-        INTEGER NPROD_RED             ! dimension of projected wave array after redistribution
-        INTEGER NBANDS                ! local number of bands
-        INTEGER NB_TOT                ! total number bands
-        INTEGER NB_PAR                ! distribution over bands (number of bands done in parallel )= WDES%COMM_INTER%NCPU
-        INTEGER NSIM                  ! band blocking (mainly for seriel version)
-        INTEGER NB_LOW                ! lowest band index in global
-        INTEGER NKDIM                 ! total number of k-points in the entire Brillouin zone (BZ)
-        ! required for HF calculations (otherwise equal to NKPTS)
-        INTEGER NKPTS_FOR_GEN_LAYOUT  ! number of k-points used for the generation of the data layout
-        ! this must not change when the number of k-point changes
-        INTEGER NKPTS                 ! number of k-points in the irreducable wedge of the BZ (IBZ)
-        INTEGER ISPIN                 ! number of spins
-        INTEGER NCDIJ                 ! dimension of arrays like CDIJ, CQIJ
-        INTEGER NIONS                 ! number of ions stored locally 
-        INTEGER NTYP                  ! number of types stored locally
-        TYPE (grid_3d), POINTER ::GRID! pointer to a grid if FFT's are required
-        INTEGER,POINTER :: NPLWKP(:)  ! number of coefficients for each k-point and band per node
-        INTEGER,POINTER :: NGVECTOR(:)! number of G-vectors in the basis for each k-point per node
-        ! collinear: NPLWKP= NGVECTOR, noncollinear NPLWKP = 2*NGVECTOR 
-        ! NGVECTOR is the same for collinear and non collinear calculations
-        ! (summed over nodes, doubled in the non collinear case)
-        INTEGER,POINTER :: NGVECTOR_POS(:)! sum of NGVECTOR up to (but not including) the current node
-        INTEGER,POINTER :: NPLWKP_TOT(:)  ! total number of coefficients in plane wave array at each k-points
-        INTEGER,POINTER :: NB_TOTK(:,:)! number of bands to be calculated for each k-point and spin
-        ! possibly smaller than NB_TOT
-        INTEGER         :: NCOL       ! number of columns
-        INTEGER,POINTER,CONTIGUOUS :: PL_INDEX(:,:) ! index a column would have in serial version
-        INTEGER,POINTER,CONTIGUOUS :: PL_COL(:,:)! number of plane wave in this column
-        INTEGER,POINTER ::NPRO_POS(:) ! for each atom, start index of entries in CPROJ in serial version
-        INTEGER,POINTER :: LMMAX(:)   ! total number of NLM quantum numbers for each type
-        INTEGER,POINTER :: LMBASE(:)  !
-        INTEGER,POINTER :: NITYP(:)   ! number of ions stored locally for each type
-        INTEGER,POINTER :: ITYP(:)    ! type for each ion
-        INTEGER,POINTER ::NT_GLOBAL(:)! global type index for this type 
-        REAL(q),POINTER :: VKPT(:,:)  ! coordinate of k-point
-        REAL(q),POINTER :: WTKPT(:)   ! symmetry weight-factor for each k-point
-        INTEGER,POINTER,CONTIGUOUS :: NINDPW(:,:)! index to the FFT box for each pw comp and k-point
-        LOGICAL,POINTER,CONTIGUOUS :: LUSEINV(:) ! for each k-point decides whether reduced G grid can be used (compare AT_GAMMA)
-        INTEGER,POINTER,CONTIGUOUS :: NINDPW_INV(:,:)! index to the FFT box for each pw comp and k-point to the G vector -G-k
-        REAL(q),POINTER,CONTIGUOUS :: FFTSCA(:,:,:)  ! scaling index if plane wave coefficients are reduced (LUSEINV .TRUE.)
-        INTEGER,POINTER,CONTIGUOUS :: MAP_TO_FULL(:,:,:) ! map from half-grid mode to full grid mode
-        INTEGER,POINTER,CONTIGUOUS :: IGX(:,:)   ! x index of each pw comp and k-point
-        INTEGER,POINTER,CONTIGUOUS :: IGY(:,:)   ! y index of each pw comp and k-point
-        INTEGER,POINTER,CONTIGUOUS :: IGZ(:,:)   ! z index of each pw comp and k-point
-        REAL(q),POINTER,CONTIGUOUS :: DATAKE(:,:,:) ! kinetic energy for each plane wave
-        ! last index labels up and down components
-        ! of the spinor in case of spin spirals
-        REAL(q) QSPIRAL(3)            ! propagation vector of spin spiral
-        TYPE(communic),POINTER  :: COMM,COMM_INTER,COMM_INB
-        TYPE(communic),POINTER  :: COMM_KINTER,COMM_KIN
-        TYPE(communic),POINTER  :: COMM_SHMEM,COMM_intra_node,COMM_inter_node
-        REAL(q) SAXIS(3)              ! quantisation axis of the spin operator
-    ! TODO maybe AT_GAMMA should be removed
-        LOGICAL,POINTER :: AT_GAMMA(:)! indicates that a k-point corresponds to gamma
-                                      ! selects special treatment
-        LOGICAL LORBITALREAL          ! special treatment at gamma
-        LOGICAL LOVERL                ! overlap required
-        LOGICAL DO_REDIS              ! data redistribution required
-        LOGICAL LNONCOLLINEAR         ! noncollinear calculations
-        LOGICAL LSORBIT               ! spin orbit coupling
-        LOGICAL LGAMMA                ! gamma point only, projected wavefunction character is REAL
-                                      ! this is only .TRUE. if precompiler flag gammareal is define 
-        LOGICAL LSPIRAL               ! calculate spin spirals?
-        LOGICAL LZEROZ                ! set m_z to zero in SET_CHARGE?
-        INTEGER NBANDSLOW             ! lowest band to be optimized (-1 no restrictions)
-        INTEGER NBANDSHIGH            ! highest band to be optimized (-1 no restrictions)
-    END TYPE wavedes
-
--   At each k-point there are maybe different number of nbands, and pw coefficients.
+\#+end<sub>src</sub>
 
