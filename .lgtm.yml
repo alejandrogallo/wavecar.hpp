@@ -1,0 +1,10 @@
+extraction:
+  cpp:
+     index:
+        build_command:
+        - make
+
+path_classifiers:
+  library:
+    - include/
+    - tests/
