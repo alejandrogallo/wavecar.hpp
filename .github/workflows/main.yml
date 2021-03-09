@@ -7,9 +7,6 @@ jobs:
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
 
-  build:
-
-    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         include:
