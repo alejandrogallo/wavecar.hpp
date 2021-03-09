@@ -1,0 +1,31 @@
+name: github pages
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: install extra repository
+        run: sudo add-apt-repository ppa:kelleyk/emacs
+
+      - name: refresh apt
+        run: sudo apt-get update
+
+      - name: install dependencies
+        run: sudo apt-get install emacs26
+
+      - name: make
+        run: make index.html
+
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@4.1.0
+        with:
+           branch: gh-pages
+           folder: ./
+
