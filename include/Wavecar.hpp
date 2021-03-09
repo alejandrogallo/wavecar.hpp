@@ -61,14 +61,6 @@ double dotProduct(const CellVector &a, const CellVector &b) {
   return std::inner_product(a.begin(), a.end(), b.begin(), 0.0);
 }
 
-double norm(const CellVector &a) {
- return std::sqrt(dotProduct(a, a));
-}
-
-double angleBetween(const CellVector &a, const CellVector &b) {
-  return std::acos(dotProduct(a, b) / norm(a) / norm(b));
-}
-
 double cellVolume(const Cell &c) {
   return
     dotProduct( c.basis[0]
@@ -142,7 +134,6 @@ WavecarHeader readWavecarHeader(const std::string &fileName) {
   std::fstream file(fileName, std::ios::binary | std::ios::in);
   double buffer;
   std::vector<double> vvbuffer;
-  // const double hbarConst = 0.26246582250210965422; // 1/eV Ang^2
 
   assert(sizeof(double) == 8);
   assert(sizeof(header.real.basis) == 72);

@@ -90,14 +90,6 @@ CellVector crossProduct(const CellVector &a, const CellVector &b) {
 double dotProduct(const CellVector &a, const CellVector &b) {
   return std::inner_product(a.begin(), a.end(), b.begin(), 0.0);
 }
-
-double norm(const CellVector &a) {
- return std::sqrt(dotProduct(a, a));
-}
-
-double angleBetween(const CellVector &a, const CellVector &b) {
-  return std::acos(dotProduct(a, b) / norm(a) / norm(b));
-}
 #+end_src
 
 
