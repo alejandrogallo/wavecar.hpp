@@ -177,7 +177,7 @@ Wavecar readWavecar(const std::string &fileName) {
   auto header(readWavecarHeader(fileName));
   std::vector<WaveDescriptor> descriptors;
 
-  for (uint8_t i=0; i < header.nSpin; i++) {
+  for (size_t i=0; i < header.nSpin; i++) {
     WaveDescriptor descriptor;
     for (size_t k=0; k < header.nKpoints; k++) {
       auto kBand(readWaveWaveDescriptor(fileName, header, i));
